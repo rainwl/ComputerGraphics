@@ -51,3 +51,49 @@ academic integrity学术诚信
 swift and brutal迅捷而残暴
 
 linear algebra线性代数
+
+## 101.2 Linear Algebra
+
+announcements公告,注意事项
+
+slides and recordings of lecture 1 now available 第一讲的幻灯片和录音已经提供了
+
+
+Graphics's dependencies
+- Basic mathematics
+  - linear algebra,calculus,statistics线代,微积分,统计
+- Basic Physics
+  - optics,mechanics光学力学
+  - (假设当光不能直线传播的时候,以光波的形式进行传递,与表面如何作用)
+- Misc
+  - Signal processing信号处理(走样,反走样)
+  - Numerical analysis 数值分析(渲染就是解一个递归问题的积分)
+  - 仿真,解有限元,扩散方程等问题
+- A bit of aesthetics 美学
+
+- More dependent on linear algebra
+  - vectors(dot products,cross)
+  - Matrices(matrix-matrix,matrix-vector)
+
+Vector Normalization 
+magnitude of a vector(数量)
+unit vector
+
+Geometrically:Parallelogram law & Triangle law几何:平行四边形定律和三角形定律
+
+Algebraically:Simply add coordiantes代数:简单地添加坐标
+
+Cartesian Coordinates笛卡儿坐标
+orthogonal unit非正交单胞模型 互相垂直的
+图形学默认的向量,是一列数,从上往下写
+A=(),括号里是竖着的x y
+AT,转置,行列互换
+算向量长度比较简单(用垂直单位坐标系) 
+
+
+Vector Multiplication
+
+Dot product (scalar )
+Cross product
+Orthonormal bases and coordinate frames
+
