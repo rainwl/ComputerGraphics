@@ -16,3 +16,7 @@ Physics-Based Computer Animation/Library/
 Physics-Based Computer Animation/Logs/
 
 *.sln
+
+Physics-Based Computer Animation/.idea/.idea.Physics-Based Computer Animation/.idea/
+
+Physics-Based Computer Animation/obj/Debug/
