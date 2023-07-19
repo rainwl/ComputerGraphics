@@ -174,23 +174,21 @@ namespace RigidBodyDynamicsSolverBasedOnImpulse
 
 
             if (!launched) return;
-            // Part I: Update velocities
 
+            // Update the velocities
             _v += dt * _gravity;
             _v *= linearDecay;
             _w *= angularDecay;
 
-            // Part II: Collision Impulse
-
+            // Do Collision Impulse
             CollisionImpulse(new Vector3(0, 0, 0), new Vector3(0, 1, 0));
             CollisionImpulse(new Vector3(0, 0, 0), new Vector3(0, 0, -1));
             CollisionImpulse(new Vector3(0, 0, 0), new Vector3(1, 0, 0));
 
-            // Part III: Update position & orientation
-
-            var trans0 = transform;
-            var x0 = trans0.position;
-            var q0 = trans0.rotation;
+            // Update the position and orientation
+            var t0 = transform;
+            var x0 = t0.position;
+            var q0 = t0.rotation;
 
             var x = x0 + dt * _v;
             var dw = 0.5f * dt * _w;
