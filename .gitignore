@@ -1,2 +1,18 @@
 
 GAMES/.idea/.idea.GAMES.dir/.idea/
+
+*.csproj
+
+Physics-Based Computer Animation/Temp/
+
+Physics-Based Computer Animation/ProjectSettings/
+
+Physics-Based Computer Animation/Packages/
+
+Physics-Based Computer Animation/UserSettings/
+
+Physics-Based Computer Animation/Library/
+
+Physics-Based Computer Animation/Logs/
+
+*.sln
