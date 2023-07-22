@@ -8,7 +8,7 @@ public class PBD_model: MonoBehaviour {
 	int[] 		E;
 	float[] 	L;
 	Vector3[] 	V;
-
+	Vector3 gravity = new Vector3(0, -9.8f, 0);
 
 	// Use this for initialization
 	void Start () 
@@ -131,18 +131,55 @@ public class PBD_model: MonoBehaviour {
 		Mesh mesh = GetComponent<MeshFilter> ().mesh;
 		Vector3[] vertices = mesh.vertices;
 
+		Vector3[] sum_x = new Vector3[vertices.Length];
+		int[] sum_n = new int[vertices.Length];
 		//Apply PBD here.
-		//...
+		for (int i = 0; i < vertices.Length; i++)
+		{
+			sum_x[i] = new Vector3(0, 0, 0);
+			sum_n[i] = 0;
+		}
+		for (int e = 0; e < L.Length; e++)
+		{
+			int i = E[e * 2];
+			int j = E[e * 2 + 1];
+			Vector3 xij = vertices[i] - vertices[j];
+			sum_x[i] = sum_x[i] + 0.5f * (vertices[i] + vertices[j] + L[e] * xij * (1.0f / xij.magnitude));
+			sum_x[j] = sum_x[j] + 0.5f * (vertices[i] + vertices[j] - L[e] * xij * (1.0f / xij.magnitude));
+			sum_n[i]++;
+			sum_n[j]++;
+		}
+		for (int i = 0; i < vertices.Length; i++)
+		{
+			if (i == 0 || i == 20) continue;
+			V[i] = V[i] + (1.0f / t) * ((0.2f * vertices[i] + sum_x[i]) / (0.2f + (float)sum_n[i]) - vertices[i]);
+			vertices[i] = (0.2f * vertices[i] + sum_x[i]) / (0.2f + (float)sum_n[i]);
+		}
 		mesh.vertices = vertices;
 	}
 
 	void Collision_Handling()
 	{
-		Mesh mesh = GetComponent<MeshFilter> ().mesh;
+		Mesh mesh = GetComponent<MeshFilter>().mesh;
 		Vector3[] X = mesh.vertices;
-		
+
 		//For every vertex, detect collision and apply impulse if needed.
-		//...
+		float radius = 2.7f;
+		GameObject sphere = GameObject.Find("Sphere");
+		Vector3 center = sphere.transform.position;
+		for (int i = 0; i < X.Length; i++)
+		{
+			if (i == 0 || i == 20)
+				continue;
+			Vector3 d = X[i] - center;
+			if (d.magnitude < radius)
+			{
+				Vector3 A = center + radius * d.normalized;
+				V[i] = V[i] + (A - X[i]) / t;
+				X[i] = A;
+			}
+		}
+
 		mesh.vertices = X;
 	}
 
@@ -157,7 +194,10 @@ public class PBD_model: MonoBehaviour {
 			
 			// for every vertex ,damp the velocity 
 			// Update the velocity by gravity , and finally update the position: xi = xi + dt * vi
-			
+			//Initial Setup
+			V[i] = V[i] * damping;
+			V[i] = V[i] + gravity * t;
+			X[i] = X[i] + V[i] * t;
 			//Initial Setup
 			//...
 		}
