@@ -3,23 +3,13 @@ GAMES/.idea/.idea.GAMES.dir/.idea/
 
 *.csproj
 
-Physics-Based Computer Animation/Temp/
-
-Physics-Based Computer Animation/ProjectSettings/
-
-Physics-Based Computer Animation/Packages/
-
-Physics-Based Computer Animation/UserSettings/
-
-Physics-Based Computer Animation/Library/
-
-Physics-Based Computer Animation/Logs/
+Physics-BasedComputerAnimation/Temp/
 
 *.sln
 
-Physics-Based Computer Animation/.idea/.idea.Physics-Based Computer Animation/.idea/
+Physics-BasedComputerAnimation/.idea/.idea.Physics-Based Computer Animation/.idea/
 
-Physics-Based Computer Animation/obj/Debug/
+Physics-BasedComputerAnimation/obj/Debug/
 
 .idea/.idea.CG-GMP-PBCA.dir/.idea/
 
@@ -36,3 +26,5 @@ Physics-BasedComputerAnimation/obj/Debug/
 Physics-BasedComputerAnimation/Logs/
 
 Physics-BasedComputerAnimation/Library/
+
+Physics-BasedComputerAnimation/.idea/.idea.Physics-BasedComputerAnimation/.idea/

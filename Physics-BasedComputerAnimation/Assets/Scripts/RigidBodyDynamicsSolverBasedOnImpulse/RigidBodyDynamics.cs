@@ -7,7 +7,7 @@ namespace RigidBodyDynamicsSolverBasedOnImpulse
     {
         #region Fields
 
-        [SerializeField] private bool launched = false;
+        [SerializeField] private bool launched;
         [SerializeField] private float dt = 0.015f;
         [SerializeField] private float linearDecay = 0.999f; // for velocity decay
         [SerializeField] private float angularDecay = 0.98f;
