@@ -13,3 +13,6 @@
 ![](https://pic4rain.oss-cn-beijing.aliyuncs.com/img/RBD_algorithm.png)
 
 
+### Implicit Integration Cloth Solver
+
+https://latex.codecogs.com/gif.latex?\\sum_{i=0}^n

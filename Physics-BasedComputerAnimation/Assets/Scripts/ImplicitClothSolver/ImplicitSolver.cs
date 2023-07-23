@@ -10,7 +10,7 @@ namespace ImplicitClothSolver
         private const float T = 0.0333f;
         private const float Mass = 1;
         private const float Damping = 0.99f;
-        private const float Rho = 0.995f;
+        // private const float Rho = 0.995f;
         private const float SpringK = 8000;
         private readonly Vector3 _gravity = new Vector3(0, -9.8f, 0);
         // ReSharper disable once InconsistentNaming
