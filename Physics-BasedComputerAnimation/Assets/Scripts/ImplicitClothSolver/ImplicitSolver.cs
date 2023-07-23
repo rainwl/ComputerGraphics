@@ -7,21 +7,26 @@ namespace ImplicitClothSolver
     {
         #region Fields
 
-        private const float T = 0.0333f;
-        private const float Mass = 1;
-        private const float Damping = 0.99f;
-        // private const float Rho = 0.995f;
+        private const float T = 0.0333f; // time step
+        private const float Mass = 1; // mass of each vertex
+
+        private const float Damping = 0.99f; // damping of velocity
+
+        // private const float Rho = 0.995f; // Jacobi method
         private const float SpringK = 8000;
         private readonly Vector3 _gravity = new Vector3(0, -9.8f, 0);
+
         // ReSharper disable once InconsistentNaming
-        private int[] E;
+        private int[] E; // Edge spring array,every two elements store the indices of vertices that construct this edge
+
         // ReSharper disable once InconsistentNaming
-        private float[] L;
+        private float[] L; // length of each springs
+
         // ReSharper disable once InconsistentNaming
-        private Vector3[] V;
-        
+        private Vector3[] V; // store vertices
+
         #endregion
-        
+
         #region Unity Methods
 
         private void Start()
@@ -35,7 +40,8 @@ namespace ImplicitClothSolver
             // store the position of each vertex in UV 
             var uv = new Vector2[n * n];
             // store the index of vertex of each triangle ( index in verticesPos[] )
-            var triangles = new int[(n - 1) * (n - 1) * 6];
+            var triangles =
+                new int[(n - 1) * (n - 1) * 6]; // triangles = 20 * 20 * 2,every triangle has 3 vertices,so * 6
 
             for (var j = 0; j < n; j++)
             {
@@ -44,8 +50,8 @@ namespace ImplicitClothSolver
                     x[j * n + i] = new Vector3(5 - 10.0f * i / (n - 1), 0, 5 - 10.0f * j / (n - 1));
                     uv[j * n + i] = new Vector3(i / (n - 1.0f), j / (n - 1.0f));
                 }
-            }   
-            
+            }
+
             // ReSharper disable once LocalVariableHidesMember
             var t = 0;
             for (var j = 0; j < n - 1; j++)
@@ -70,6 +76,7 @@ namespace ImplicitClothSolver
 
             // Construct the original E
             // store the index of vertex in each edge
+            // construct the spring system
             // ReSharper disable once InconsistentNaming
             var _E = new int[triangles.Length * 2];
             for (var i = 0; i < triangles.Length; i += 3)
@@ -85,10 +92,10 @@ namespace ImplicitClothSolver
             // Reorder the original edge list
             for (var i = 0; i < _E.Length; i += 2)
                 if (_E[i] > _E[i + 1])
-                    Swap(ref _E[i], ref _E[i + 1]);
+                    ExtScripts.ExtFunctions.Swap(ref _E[i], ref _E[i + 1]);
 
             // Sort the original edge list using quicksort
-            QuickSort(ref _E, 0, _E.Length / 2 - 1);
+            ExtScripts.ExtFunctions.QuickSort(ref _E, 0, _E.Length / 2 - 1);
 
             var eNumber = 0;
             for (var i = 0; i < _E.Length; i += 2)
@@ -104,7 +111,7 @@ namespace ImplicitClothSolver
                     E[e * 2 + 1] = _E[i + 1];
                     e++;
                 }
-    
+
             // rest length of each spring
             L = new float[E.Length / 2];
             for (var e = 0; e < E.Length / 2; e++)
@@ -122,9 +129,9 @@ namespace ImplicitClothSolver
         private void Update()
         {
             var mesh = GetComponent<MeshFilter>().mesh;
-            var x = mesh.vertices;
-            var lastX = new Vector3[x.Length];
-            var xHat = new Vector3[x.Length];
+            var x = mesh.vertices; // current position
+            var lastX = new Vector3[x.Length]; // last position
+            var xHat = new Vector3[x.Length]; // copy of current position, for update
             var g = new Vector3[x.Length];
 
             //Initial Setup.
@@ -135,8 +142,8 @@ namespace ImplicitClothSolver
                 xHat[i] = x[i] + T * V[i];
                 x[i] = xHat[i];
             }
-            
-            
+
+
             var omega = 1.0f;
             for (var k = 0; k < 32; k++)
             {
@@ -149,12 +156,13 @@ namespace ImplicitClothSolver
                 // };
 
                 GetGradient(x, xHat, T, g);
-                
+
                 // Update X by gradient
                 for (var i = 0; i < x.Length; i++)
                 {
                     if (i is 0 or 20) continue;
-                    var xNew = omega * (x[i] + (1.0f / (Mass / (T * T) + 4.0f * SpringK)) * -g[i]) + (1.0f-omega) * lastX[i];
+                    var xNew = omega * (x[i] + (1.0f / (Mass / (T * T) + 4.0f * SpringK)) * -g[i]) +
+                               (1.0f - omega) * lastX[i];
                     lastX[i] = x[i];
                     x[i] = xNew;
                 }
@@ -165,7 +173,7 @@ namespace ImplicitClothSolver
             {
                 V[i] += (x[i] - xHat[i]) / T;
             }
-            
+
             mesh.vertices = x;
 
             CollisionHandling();
@@ -180,7 +188,7 @@ namespace ImplicitClothSolver
         {
             var mesh = GetComponent<MeshFilter>().mesh;
             var x = mesh.vertices;
-            
+
             //For every vertex, detect collision and apply impulse if needed.
             const float radius = 2.7f;
             var sphere = GameObject.Find("Sphere");
@@ -206,7 +214,7 @@ namespace ImplicitClothSolver
             {
                 g[i] = Mass * (x[i] - xHat[i]) / (t * t) - Mass * _gravity;
             }
-            
+
             //Spring Force.
             for (var e = 0; e < L.Length; e++)
             {
@@ -215,55 +223,6 @@ namespace ImplicitClothSolver
                 g[i] = g[i] + SpringK * (1 - L[e] / (x[i] - x[j]).magnitude) * (x[i] - x[j]);
                 g[j] = g[j] - SpringK * (1 - L[e] / (x[i] - x[j]).magnitude) * (x[i] - x[j]);
             }
-
-        }
-
-        #endregion
-
-        #region Ext Methods
-
-        private static void QuickSort(ref int[] a, int l, int r)
-        {
-            while (true)
-            {
-                if (l < r)
-                {
-                    var j = QuickSortPartition(ref a, l, r);
-                    QuickSort(ref a, l, j - 1);
-                    l = j + 1;
-                    continue;
-                }
-
-                break;
-            }
-        }
-
-        private static int QuickSortPartition(ref int[] a, int l, int r)
-        {
-            var pivot0 = a[l * 2 + 0];
-            var pivot1 = a[l * 2 + 1];
-            var i = l;
-            var j = r + 1;
-
-            while (true)
-            {
-                do ++i;
-                while (i <= r && (a[i * 2] < pivot0 || a[i * 2] == pivot0 && a[i * 2 + 1] <= pivot1));
-                do --j;
-                while (a[j * 2] > pivot0 || a[j * 2] == pivot0 && a[j * 2 + 1] > pivot1);
-                if (i >= j) break;
-                Swap(ref a[i * 2], ref a[j * 2]);
-                Swap(ref a[i * 2 + 1], ref a[j * 2 + 1]);
-            }
-
-            Swap(ref a[l * 2 + 0], ref a[j * 2 + 0]);
-            Swap(ref a[l * 2 + 1], ref a[j * 2 + 1]);
-            return j;
-        }
-
-        private static void Swap(ref int a, ref int b)
-        {
-            (a, b) = (b, a);
         }
 
         #endregion
