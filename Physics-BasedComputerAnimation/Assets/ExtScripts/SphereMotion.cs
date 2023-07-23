@@ -13,7 +13,9 @@ namespace ExtScripts
         private bool _isCameraNotNull;
 
         #endregion
-        
+
+        #region Unity Methods
+
         private void Start()
         {
             _camera = Camera.main;
@@ -33,6 +35,7 @@ namespace ExtScripts
 
                 _offset = Input.mousePosition - _camera.WorldToScreenPoint(transform.position);
             }
+
             if (Input.GetMouseButtonUp(0))
                 _pressed = false;
             if (!_pressed) return;
@@ -49,5 +52,7 @@ namespace ExtScripts
                 _camera.transform.RotateAround(new Vector3(0, 0, 0), Vector3.up, h);
             }
         }
+
+        #endregion
     }
 }

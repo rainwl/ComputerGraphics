@@ -144,7 +144,7 @@ namespace ImplicitClothSolver
             }
 
 
-            var omega = 1.0f;
+            const float omega = 1.0f;
             for (var k = 0; k < 32; k++)
             {
                 //Chebyshev Acceleration

@@ -143,15 +143,18 @@ namespace Position_BasedDynamics
             var mesh = GetComponent<MeshFilter>().mesh;
             var vertices = mesh.vertices;
 
-            var sumX = new Vector3[vertices.Length];
-            var sumN = new int[vertices.Length];
-            //Apply PBD here.
+            // implement position-based dynamics in a Jacobi fashion
+            var sumX = new Vector3[vertices.Length]; // sum of vertex position updates
+            var sumN = new int[vertices.Length];     // sum of vertex count updates
+            
+            // Apply PBD here,Set both arrays to zeros
             for (var i = 0; i < vertices.Length; i++)
             {
                 sumX[i] = new Vector3(0, 0, 0);
                 sumN[i] = 0;
             }
 
+            // for every edge e connecting i and j ,update the arrays
             for (var e = 0; e < L.Length; e++)
             {
                 var i = E[e * 2];
@@ -163,6 +166,7 @@ namespace Position_BasedDynamics
                 sumN[j]++;
             }
 
+            // update each vertex velocity
             for (var i = 0; i < vertices.Length; i++)
             {
                 if (i is 0 or 20) continue;
