@@ -1,3 +1,5 @@
+[TOC]
+
 # CG-GMP-PBCA
 `Computer Graphics`
 `Geometry Modeling And Processing`
