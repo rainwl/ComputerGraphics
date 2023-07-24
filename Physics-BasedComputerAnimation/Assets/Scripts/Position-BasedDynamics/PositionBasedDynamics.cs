@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using Unity.Jobs;
+using Unity.Collections;
 
 namespace Position_BasedDynamics
 {
@@ -22,6 +24,19 @@ namespace Position_BasedDynamics
 
         #endregion
 
+        public struct MyJob : IJob
+        {
+            public float a;
+            public float b;
+            public NativeArray<float> result;
+
+            public void Execute()
+            {
+                result[0] = a + b;
+            }
+        }
+        
+        
         #region Unity Methods
 
         private void Start()
