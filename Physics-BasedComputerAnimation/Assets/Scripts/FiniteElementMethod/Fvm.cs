@@ -1,8 +1,6 @@
 using System;
 using System.IO;
-using ExtScripts;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace FiniteElementMethod
 {
@@ -19,8 +17,12 @@ namespace FiniteElementMethod
         private int[] _tet;
         private int _tetNumber; //The number of tetrahedron
         private Vector3[] _force;
-        private Vector3[] _v;
-        private Vector3[] _x;
+
+        // ReSharper disable once InconsistentNaming
+        private Vector3[] V;
+
+        // ReSharper disable once InconsistentNaming
+        private Vector3[] X;
         private int _number; //The number of vertices
         private Matrix4x4[] _invDm;
 
@@ -28,18 +30,15 @@ namespace FiniteElementMethod
         private Vector3[] _vSum;
         private int[] _vNum;
 
-        private Svd _svd = new Svd();
-
         #endregion
 
         #region Unity Methods
 
         private void Start()
         {
-            // FILO IO: Read the house model from files.
             {
                 var fileContent = File.ReadAllText("Assets/Resources/house2.ele");
-                var strings = fileContent.Split(new char[] { ' ', '\t', '\r', '\n' },
+                var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
 
                 _tetNumber = int.Parse(strings[0]);
@@ -55,49 +54,48 @@ namespace FiniteElementMethod
             }
             {
                 var fileContent = File.ReadAllText("Assets/Resources/house2.node");
-                var strings = fileContent.Split(new char[] { ' ', '\t', '\r', '\n' },
+                var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
                 _number = int.Parse(strings[0]);
-                _x = new Vector3[_number];
+                X = new Vector3[_number];
                 for (var i = 0; i < _number; i++)
                 {
-                    _x[i].x = float.Parse(strings[i * 5 + 5]) * 0.4f;
-                    _x[i].y = float.Parse(strings[i * 5 + 6]) * 0.4f;
-                    _x[i].z = float.Parse(strings[i * 5 + 7]) * 0.4f;
+                    X[i].x = float.Parse(strings[i * 5 + 5]) * 0.4f;
+                    X[i].y = float.Parse(strings[i * 5 + 6]) * 0.4f;
+                    X[i].z = float.Parse(strings[i * 5 + 7]) * 0.4f;
                 }
 
                 //Centralize the model.
                 var center = Vector3.zero;
-                for (var i = 0; i < _number; i++) center += _x[i];
+                for (var i = 0; i < _number; i++) center += X[i];
                 center /= _number;
                 for (var i = 0; i < _number; i++)
                 {
-                    _x[i] -= center;
-                    (_x[i].y, _x[i].z) = (_x[i].z, _x[i].y);
+                    X[i] -= center;
+                    (X[i].y, X[i].z) = (X[i].z, X[i].y);
                 }
             }
-
-
+            
             //Create triangle mesh.
             var vertices = new Vector3[_tetNumber * 12];
             var vertexNumber = 0;
             for (var tet = 0; tet < _tetNumber; tet++)
             {
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
 
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 3]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
 
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
 
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
             }
 
             var triangles = new int[_tetNumber * 12];
@@ -114,7 +112,7 @@ namespace FiniteElementMethod
             mesh.RecalculateNormals();
 
 
-            _v = new Vector3[_number];
+            V = new Vector3[_number];
             _force = new Vector3[_number];
             _vSum = new Vector3[_number];
             _vNum = new int[_number];
@@ -135,18 +133,18 @@ namespace FiniteElementMethod
             var vertexNumber = 0;
             for (var tet = 0; tet < _tetNumber; tet++)
             {
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 3]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 3]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = _x[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
             }
 
             var mesh = GetComponent<MeshFilter>().mesh;
@@ -162,19 +160,19 @@ namespace FiniteElementMethod
         {
             var ret = Matrix4x4.zero;
             //TODO: Need to build edge matrix here.
-            ret[0, 0] = _x[_tet[tet * 4 + 1]].x - _x[_tet[tet * 4 + 0]].x;
-            ret[1, 0] = _x[_tet[tet * 4 + 1]].y - _x[_tet[tet * 4 + 0]].y;
-            ret[2, 0] = _x[_tet[tet * 4 + 1]].z - _x[_tet[tet * 4 + 0]].z;
+            ret[0, 0] = X[_tet[tet * 4 + 1]].x - X[_tet[tet * 4 + 0]].x;
+            ret[1, 0] = X[_tet[tet * 4 + 1]].y - X[_tet[tet * 4 + 0]].y;
+            ret[2, 0] = X[_tet[tet * 4 + 1]].z - X[_tet[tet * 4 + 0]].z;
             ret[3, 0] = 0;
 
-            ret[0, 1] = _x[_tet[tet * 4 + 2]].x - _x[_tet[tet * 4 + 0]].x;
-            ret[1, 1] = _x[_tet[tet * 4 + 2]].y - _x[_tet[tet * 4 + 0]].y;
-            ret[2, 1] = _x[_tet[tet * 4 + 2]].z - _x[_tet[tet * 4 + 0]].z;
+            ret[0, 1] = X[_tet[tet * 4 + 2]].x - X[_tet[tet * 4 + 0]].x;
+            ret[1, 1] = X[_tet[tet * 4 + 2]].y - X[_tet[tet * 4 + 0]].y;
+            ret[2, 1] = X[_tet[tet * 4 + 2]].z - X[_tet[tet * 4 + 0]].z;
             ret[3, 1] = 0;
 
-            ret[0, 2] = _x[_tet[tet * 4 + 3]].x - _x[_tet[tet * 4 + 0]].x;
-            ret[1, 2] = _x[_tet[tet * 4 + 3]].y - _x[_tet[tet * 4 + 0]].y;
-            ret[2, 2] = _x[_tet[tet * 4 + 3]].z - _x[_tet[tet * 4 + 0]].z;
+            ret[0, 2] = X[_tet[tet * 4 + 3]].x - X[_tet[tet * 4 + 0]].x;
+            ret[1, 2] = X[_tet[tet * 4 + 3]].y - X[_tet[tet * 4 + 0]].y;
+            ret[2, 2] = X[_tet[tet * 4 + 3]].z - X[_tet[tet * 4 + 0]].z;
             ret[3, 2] = 0;
 
             ret[0, 3] = 0;
@@ -195,8 +193,8 @@ namespace FiniteElementMethod
 
             for (var tet = 0; tet < _tetNumber; tet++)
             {
-                var sum = _v[_tet[tet * 4 + 0]] + _v[_tet[tet * 4 + 1]] + _v[_tet[tet * 4 + 2]] +
-                          _v[_tet[tet * 4 + 3]];
+                var sum = V[_tet[tet * 4 + 0]] + V[_tet[tet * 4 + 1]] + V[_tet[tet * 4 + 2]] +
+                          V[_tet[tet * 4 + 3]];
                 _vSum[_tet[tet * 4 + 0]] += sum;
                 _vSum[_tet[tet * 4 + 1]] += sum;
                 _vSum[_tet[tet * 4 + 2]] += sum;
@@ -209,7 +207,7 @@ namespace FiniteElementMethod
 
             for (var i = 0; i < _number; i++)
             {
-                _v[i] = 0.9f * _v[i] + 0.1f * _vSum[i] / _vNum[i];
+                V[i] = 0.9f * V[i] + 0.1f * _vSum[i] / _vNum[i];
             }
         }
 
@@ -219,12 +217,12 @@ namespace FiniteElementMethod
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 for (var i = 0; i < _number; i++)
-                    _v[i].y += 0.2f;
+                    V[i].y += 0.2f;
             }
 
             for (var i = 0; i < _number; i++)
             {
-                //TODO: Add gravity to Force.
+                // Add gravity to Force.
                 _force[i] = new Vector3(0, -9.8f * Mass, 0);
             }
 
@@ -283,14 +281,14 @@ namespace FiniteElementMethod
             for (var i = 0; i < _number; i++)
             {
                 //TODO: Update X and V here.
-                _v[i] = (_v[i] + DT * _force[i] / Mass) * Damp;
-                _x[i] += _v[i] * DT;
+                V[i] = (V[i] + DT * _force[i] / Mass) * Damp;
+                X[i] += V[i] * DT;
                 //TODO: (Particle) collision with floor.
-                if (_x[i].y < -3f) //这里仅对局部坐标进行相应判断，选取-3的原因是底部物体的世界坐标是-3
+                if (X[i].y < -3f) //这里仅对局部坐标进行相应判断，选取-3的原因是底部物体的世界坐标是-3
                 {
-                    _x[i].y = -3f;
-                    if (_v[i].y < 0)
-                        _v[i].y = -_v[i].y;
+                    X[i].y = -3f;
+                    if (V[i].y < 0)
+                        V[i].y = -V[i].y;
                 }
             }
         }

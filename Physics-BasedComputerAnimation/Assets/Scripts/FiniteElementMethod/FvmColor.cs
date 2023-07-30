@@ -212,7 +212,7 @@ namespace FiniteElementMethod
             for(int i = 0; i < m_VertexNum; i++)
             {
                 m_Force[i] = new Vector3(0, -9.8f * Mass, 0);
-                m_VertexColor[i] = new Color(0, 0, 0, 1);
+                m_VertexColor[i] = new Color(0, 1, 0, 1);
             }
 
             for (int tetrahedra = 0; tetrahedra < m_TetrahedraNum; tetrahedra++)

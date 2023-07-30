@@ -178,7 +178,7 @@ namespace FiniteElementMethod
 
             Parallel.For(0, _number, i =>
             {
-                //TODO: Add gravity to Force.
+                // Add gravity to Force.
                 Force[i] = Vector3.zero;
                 Force[i].y += Mass * G;
             });
