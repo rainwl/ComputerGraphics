@@ -7,145 +7,153 @@ namespace FiniteElementMethod
 {
     public class FvmColor : MonoBehaviour
     {
-        [FormerlySerializedAs("mVelocitySmoothWeight")] [FormerlySerializedAs("m_VelocitySmoothWeight")] [Range(0, 0.01f)]
-        public float velocitySmoothWeight = 0.005f;
-        [FormerlySerializedAs("useHyperelasticModels")] [FormerlySerializedAs("m_UseHyperelasticModels")] public bool useHyperElasticModels = false;
-        private const float TimeStep 	= 0.003f;
-        private const float Mass 		= 1;
-        private const float Stiffness0	= 5000.0f;
-        private const float Stiffness1 	= 5000.0f;
-        private const float Damp		= 0.999f;
+        #region Fields
+
+        [Range(0, 0.01f)] public float velocitySmoothWeight = 0.005f;
+        public bool useHyperElasticModels = false;
+        
+        private const float DT = 0.003f;
+        private const float Mass = 1;
+        private const float Stiffness0 = 5000.0f;
+        private const float Stiffness1 = 5000.0f;
+        private const float Damp = 0.999f;
+        
         private const float CollisionRestitutionN = 0.5f;
         private const float CollisionRestitutionT = 0.5f;
 
-        private int[] m_Tetrahedra;
-        private int m_TetrahedraNum;
+        private int[] _tetrahedron;
+        private int _tetrahedronNum;
 
-        private Vector3[] 	m_Force;
-        private Vector3[] 	m_Velocity;
-        private Vector3[] 	m_Position;
-        private int         m_VertexNum;
+        private Vector3[] _force;
+        private Vector3[] _velocity;
+        private Vector3[] _position;
+        private int _vertexNum;
 
-        private Matrix4x4[] m_InvDm;
- 
+        private Matrix4x4[] _invDm;
+
         //For Laplacian smoothing.
-        private Vector3[] m_NeighborhoodVelocitySum;
-        private int[] m_NeighborhoodNum;
- 
-        private Color[] m_VertexColor;
- 
-        private SVD m_SVD = new SVD();
+        private Vector3[] _neighborhoodVelocitySum;
+        private int[] _neighborhoodNum;
 
-        Matrix4x4 Build_Edge_Matrix(int tetrahedra)
+        private Color[] _vertexColor;
+
+        private readonly SVD _svd = new();
+
+        #endregion
+        
+
+        private Matrix4x4 BuildEdgeMatrix(int tetrahedron)
         {
-            Vector4 X10 = m_Position[m_Tetrahedra[tetrahedra * 4 + 1]] - m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-            Vector4 X20 = m_Position[m_Tetrahedra[tetrahedra * 4 + 2]] - m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-            Vector4 X30 = m_Position[m_Tetrahedra[tetrahedra * 4 + 3]] - m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-            Matrix4x4 edgeMatrix = new Matrix4x4();
-            edgeMatrix.SetColumn(0, X10);
-            edgeMatrix.SetColumn(1, X20);
-            edgeMatrix.SetColumn(2, X30);
+            Vector4 x10 = _position[_tetrahedron[tetrahedron * 4 + 1]] - _position[_tetrahedron[tetrahedron * 4 + 0]];
+            Vector4 x20 = _position[_tetrahedron[tetrahedron * 4 + 2]] - _position[_tetrahedron[tetrahedron * 4 + 0]];
+            Vector4 x30 = _position[_tetrahedron[tetrahedron * 4 + 3]] - _position[_tetrahedron[tetrahedron * 4 + 0]];
+            var edgeMatrix = new Matrix4x4();
+            edgeMatrix.SetColumn(0, x10);
+            edgeMatrix.SetColumn(1, x20);
+            edgeMatrix.SetColumn(2, x30);
             edgeMatrix.SetColumn(3, new Vector4(0, 0, 0, 1));
 
             return edgeMatrix;
         }
 
-        void Start()
+        private void Start()
         {
             // FILO IO: Read the house model from files.
-            // The model is from Jonathan Schewchuk's Stellar lib.
+            // The model is from Jonathan Stellar lib.
             {
-                string fileContent = File.ReadAllText("Assets/Resources/house2.ele");
-                string[] strings = fileContent.Split(new char[]{' ', '\t', '\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+                var fileContent = File.ReadAllText("Assets/Resources/house2.ele");
+                var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
+                    StringSplitOptions.RemoveEmptyEntries);
 
-                m_TetrahedraNum = int.Parse(strings[0]);
-                m_Tetrahedra = new int[m_TetrahedraNum * 4];
+                _tetrahedronNum = int.Parse(strings[0]);
+                _tetrahedron = new int[_tetrahedronNum * 4];
 
-                for(int tetrahedra = 0; tetrahedra < m_TetrahedraNum; tetrahedra++)
+                for (var tetrahedron = 0; tetrahedron < _tetrahedronNum; tetrahedron++)
                 {
-                    m_Tetrahedra[tetrahedra * 4 + 0] = int.Parse(strings[tetrahedra * 5 + 4]) - 1;
-                    m_Tetrahedra[tetrahedra * 4 + 1] = int.Parse(strings[tetrahedra * 5 + 5]) - 1;
-                    m_Tetrahedra[tetrahedra * 4 + 2] = int.Parse(strings[tetrahedra * 5 + 6]) - 1;
-                    m_Tetrahedra[tetrahedra * 4 + 3] = int.Parse(strings[tetrahedra * 5 + 7]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 0] = int.Parse(strings[tetrahedron * 5 + 4]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 1] = int.Parse(strings[tetrahedron * 5 + 5]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 2] = int.Parse(strings[tetrahedron * 5 + 6]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 3] = int.Parse(strings[tetrahedron * 5 + 7]) - 1;
                 }
             }
             {
-                string fileContent = File.ReadAllText("Assets/Resources/house2.node");
-                string[] strings = fileContent.Split(new char[]{' ', '\t', '\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
-                m_VertexNum = int.Parse(strings[0]);
-                m_Position = new Vector3[m_VertexNum];
-                m_VertexColor = new Color[m_VertexNum];
-                m_NeighborhoodVelocitySum = new Vector3[m_VertexNum];
-                m_NeighborhoodNum = new int[m_VertexNum];
-                for (int i = 0; i < m_VertexNum; i++)
+                var fileContent = File.ReadAllText("Assets/Resources/house2.node");
+                var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
+                    StringSplitOptions.RemoveEmptyEntries);
+                _vertexNum = int.Parse(strings[0]);
+                _position = new Vector3[_vertexNum];
+                _vertexColor = new Color[_vertexNum];
+                _neighborhoodVelocitySum = new Vector3[_vertexNum];
+                _neighborhoodNum = new int[_vertexNum];
+                for (var i = 0; i < _vertexNum; i++)
                 {
-                    m_Position[i].x = float.Parse(strings[i * 5 + 5]) * 0.4f;
-                    m_Position[i].y = float.Parse(strings[i * 5 + 6]) * 0.4f;
-                    m_Position[i].z = float.Parse(strings[i * 5 + 7]) * 0.4f;
-                    m_VertexColor[i] = new Color(0, 0, 0, 1);
-                    m_NeighborhoodVelocitySum[i] = new Vector3(0, 0, 0);
-                    m_NeighborhoodNum[i] = 0;
+                    _position[i].x = float.Parse(strings[i * 5 + 5]) * 0.4f;
+                    _position[i].y = float.Parse(strings[i * 5 + 6]) * 0.4f;
+                    _position[i].z = float.Parse(strings[i * 5 + 7]) * 0.4f;
+                    _vertexColor[i] = new Color(0, 0, 0, 1);
+                    _neighborhoodVelocitySum[i] = new Vector3(0, 0, 0);
+                    _neighborhoodNum[i] = 0;
                 }
+
                 //Centralize the model.
-                Vector3 center = Vector3.zero;
-                for (int i = 0; i < m_VertexNum; i++)
-                    center += m_Position[i];
-                center = center / m_VertexNum;
-                for(int i = 0; i < m_VertexNum; i++)
+                var center = Vector3.zero;
+                for (var i = 0; i < _vertexNum; i++)
+                    center += _position[i];
+                center /= _vertexNum;
+                for (var i = 0; i < _vertexNum; i++)
                 {
-                    m_Position[i] -= center;
-                    float temp = m_Position[i].y;
-                    m_Position[i].y = m_Position[i].z;
-                    m_Position[i].z = temp;
+                    _position[i] -= center;
+                    (_position[i].y, _position[i].z) = (_position[i].z, _position[i].y);
                 }
             }
 
             //Create triangle mesh.
-            Vector3[] vertices = new Vector3[m_TetrahedraNum * 12];
-            int vertex_number = 0;
-            for(int tetrahedra = 0; tetrahedra < m_TetrahedraNum; tetrahedra++)
+            var vertices = new Vector3[_tetrahedronNum * 12];
+            var vertexNumber = 0;
+            for (var tetrahedron = 0; tetrahedron < _tetrahedronNum; tetrahedron++)
             {
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 2]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 1]];
 
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 3]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 2]];
 
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 1]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 3]];
 
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 1]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 2]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 3]];
             }
 
-            int[] triangles = new int[m_TetrahedraNum * 12];
-            for(int t = 0; t < m_TetrahedraNum * 4; t++)
+            var triangles = new int[_tetrahedronNum * 12];
+            for (var t = 0; t < _tetrahedronNum * 4; t++)
             {
                 triangles[t * 3 + 0] = t * 3 + 0;
                 triangles[t * 3 + 1] = t * 3 + 1;
                 triangles[t * 3 + 2] = t * 3 + 2;
             }
-            Mesh mesh = GetComponent<MeshFilter>().mesh;
+
+            var mesh = GetComponent<MeshFilter>().mesh;
             mesh.vertices = vertices;
             mesh.triangles = triangles;
             mesh.RecalculateNormals();
 
-            m_Velocity = new Vector3[m_VertexNum];
-            m_Force = new Vector3[m_VertexNum];
+            _velocity = new Vector3[_vertexNum];
+            _force = new Vector3[_vertexNum];
 
-            m_InvDm = new Matrix4x4[m_TetrahedraNum];
-            for (int t = 0; t < m_TetrahedraNum; t++)
+            _invDm = new Matrix4x4[_tetrahedronNum];
+            for (var t = 0; t < _tetrahedronNum; t++)
             {
-                Matrix4x4 edgeMatrix = Build_Edge_Matrix(t);
-                m_InvDm[t] = edgeMatrix.inverse;
+                var edgeMatrix = BuildEdgeMatrix(t);
+                _invDm[t] = edgeMatrix.inverse;
             }
         }
 
-        Matrix4x4 MinusMartix(Matrix4x4 m1, Matrix4x4 m2)
+        private static Matrix4x4 MinusMatrix(Matrix4x4 m1, Matrix4x4 m2)
         {
             return new Matrix4x4(
                 m1.GetColumn(0) - m2.GetColumn(0),
@@ -153,47 +161,43 @@ namespace FiniteElementMethod
                 m1.GetColumn(2) - m2.GetColumn(2),
                 m1.GetColumn(3) - m2.GetColumn(3));
         }
-    
-        Matrix4x4 AddMartix(Matrix4x4 m1, Matrix4x4 m2)
-        {
-            return new Matrix4x4(
+
+        private static Matrix4x4 AddMatrix(Matrix4x4 m1, Matrix4x4 m2) =>
+            new(
                 m1.GetColumn(0) + m2.GetColumn(0),
                 m1.GetColumn(1) + m2.GetColumn(1),
                 m1.GetColumn(2) + m2.GetColumn(2),
                 m1.GetColumn(3) + m2.GetColumn(3));
-        }
-    
-        Matrix4x4 MartixMulFloat(Matrix4x4 m1, float m2)
-        {
-            return new Matrix4x4(
+
+        private static Matrix4x4 MatrixMulFloat(Matrix4x4 m1, float m2) =>
+            new(
                 m1.GetColumn(0) * m2,
                 m1.GetColumn(1) * m2,
                 m1.GetColumn(2) * m2,
                 m1.GetColumn(3) * m2);
+
+        private static Matrix4x4 _Method1(Matrix4x4 deformationGradient)
+        {
+            var greenStrain = deformationGradient.transpose * deformationGradient;
+            greenStrain = MinusMatrix(greenStrain, Matrix4x4.identity);
+            greenStrain = MatrixMulFloat(greenStrain, 0.5f);
+
+            var stress = MatrixMulFloat(greenStrain, 2 * Stiffness1);
+            var greenStrainTrace = greenStrain.m00 + greenStrain.m11 + greenStrain.m22;
+            stress = AddMatrix(stress, MatrixMulFloat(Matrix4x4.identity, Stiffness0 * greenStrainTrace));
+
+            return deformationGradient * stress;
         }
 
-        Matrix4x4 _Method1(Matrix4x4 deformationGradient)
+        private Matrix4x4 _Method2(Matrix4x4 deformationGradient)
         {
-            Matrix4x4 greenStrain = deformationGradient.transpose * deformationGradient;
-            greenStrain = MinusMartix(greenStrain, Matrix4x4.identity);
-            greenStrain = MartixMulFloat(greenStrain, 0.5f);
+            var u = new Matrix4x4();
+            var s = new Matrix4x4();
+            var v = new Matrix4x4();
+            _svd.svd(deformationGradient, ref u, ref s, ref v);
 
-            Matrix4x4 stress = MartixMulFloat(greenStrain, 2 * Stiffness1);
-            float greenStrainTrace = greenStrain.m00 + greenStrain.m11 + greenStrain.m22;
-            stress = AddMartix(stress, MartixMulFloat(Matrix4x4.identity, Stiffness0 * greenStrainTrace));
-
-            return deformationGradient * stress;   
-        }
-
-        Matrix4x4 _Method2(Matrix4x4 deformationGradient)
-        {
-            Matrix4x4 u = new Matrix4x4();
-            Matrix4x4 s = new Matrix4x4();
-            Matrix4x4 v = new Matrix4x4();
-            m_SVD.svd(deformationGradient, ref u, ref s, ref v);
-
-            Matrix4x4 diag = new Matrix4x4();
-            float I = s.m00 * s.m00 + s.m11 * s.m11 + s.m22 * s.m22;
+            var diag = new Matrix4x4();
+            var I = s.m00 * s.m00 + s.m11 * s.m11 + s.m22 * s.m22;
             diag.m00 = 2.0f * Stiffness0 * (I - 3.0f) * s.m00 + Stiffness1 * (s.m00 * s.m00 - 1.0f) * s.m00;
             diag.m11 = 2.0f * Stiffness0 * (I - 3.0f) * s.m11 + Stiffness1 * (s.m11 * s.m11 - 1.0f) * s.m11;
             diag.m22 = 2.0f * Stiffness0 * (I - 3.0f) * s.m22 + Stiffness1 * (s.m22 * s.m22 - 1.0f) * s.m22;
@@ -201,137 +205,149 @@ namespace FiniteElementMethod
             return u * diag * v.transpose;
         }
 
-        void _Update()
+        private void _Update()
         {
-            if(Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                for (int i = 0; i < m_VertexNum; i++)
-                    m_Velocity[i].y += 0.2f;
+                for (var i = 0; i < _vertexNum; i++)
+                    _velocity[i].y += 0.2f;
             }
 
-            for(int i = 0; i < m_VertexNum; i++)
+            for (var i = 0; i < _vertexNum; i++)
             {
-                m_Force[i] = new Vector3(0, -9.8f * Mass, 0);
-                m_VertexColor[i] = new Color(0, 1, 0, 1);
+                _force[i] = new Vector3(0, -9.8f * Mass, 0);
+                _vertexColor[i] = new Color(0, 1, 0, 1);
             }
 
-            for (int tetrahedra = 0; tetrahedra < m_TetrahedraNum; tetrahedra++)
+            for (var tetrahedron = 0; tetrahedron < _tetrahedronNum; tetrahedron++)
             {
-                Matrix4x4 deformationGradient = Build_Edge_Matrix(tetrahedra) * m_InvDm[tetrahedra];
+                var deformationGradient = BuildEdgeMatrix(tetrahedron) * _invDm[tetrahedron];
 
-                Matrix4x4 firstPKStress;
+                Matrix4x4 firstPkStress;
                 if (useHyperElasticModels)
                 {
-                    firstPKStress = _Method2(deformationGradient);
+                    firstPkStress = _Method2(deformationGradient);
                 }
                 else
                 {
-                    firstPKStress = _Method1(deformationGradient);
+                    firstPkStress = _Method1(deformationGradient);
                 }
 
-                Matrix4x4 force = MartixMulFloat(firstPKStress, -1.0f / (6.0f * m_InvDm[tetrahedra].determinant));
-                force = force * m_InvDm[tetrahedra].transpose;
+                var force = MatrixMulFloat(firstPkStress, -1.0f / (6.0f * _invDm[tetrahedron].determinant));
+                force = force * _invDm[tetrahedron].transpose;
 
                 Vector3 force1 = force.GetColumn(0);
                 Vector3 force2 = force.GetColumn(1);
                 Vector3 force3 = force.GetColumn(2);
-                Vector3 force0 = -force1 - force2 - force3;
-                int vertexIndex0 = m_Tetrahedra[tetrahedra * 4 + 0];
-                int vertexIndex1 = m_Tetrahedra[tetrahedra * 4 + 1];
-                int vertexIndex2 = m_Tetrahedra[tetrahedra * 4 + 2];
-                int vertexIndex3 = m_Tetrahedra[tetrahedra * 4 + 3];
-                m_Force[vertexIndex0] += force0;
-                m_Force[vertexIndex1] += force1;
-                m_Force[vertexIndex2] += force2;
-                m_Force[vertexIndex3] += force3;
+                var force0 = -force1 - force2 - force3;
+                var vertexIndex0 = _tetrahedron[tetrahedron * 4 + 0];
+                var vertexIndex1 = _tetrahedron[tetrahedron * 4 + 1];
+                var vertexIndex2 = _tetrahedron[tetrahedron * 4 + 2];
+                var vertexIndex3 = _tetrahedron[tetrahedron * 4 + 3];
+                _force[vertexIndex0] += force0;
+                _force[vertexIndex1] += force1;
+                _force[vertexIndex2] += force2;
+                _force[vertexIndex3] += force3;
 
-                m_VertexColor[vertexIndex0].r += force0.magnitude * 0.005f;
-                m_VertexColor[vertexIndex1].r += force1.magnitude * 0.005f;
-                m_VertexColor[vertexIndex2].r += force2.magnitude * 0.005f;
-                m_VertexColor[vertexIndex3].r += force3.magnitude * 0.005f;
+                _vertexColor[vertexIndex0].r += force0.magnitude * 0.005f;
+                _vertexColor[vertexIndex1].r += force1.magnitude * 0.005f;
+                _vertexColor[vertexIndex2].r += force2.magnitude * 0.005f;
+                _vertexColor[vertexIndex3].r += force3.magnitude * 0.005f;
             }
 
-            for(int i = 0; i < m_VertexNum; i++)
+            for (var i = 0; i < _vertexNum; i++)
             {
-                m_Velocity[i] += m_Force[i] / Mass * TimeStep;
-                m_Velocity[i] *= Damp;
+                _velocity[i] += _force[i] / Mass * DT;
+                _velocity[i] *= Damp;
             }
 
-            for(int tetrahedra = 0; tetrahedra < m_TetrahedraNum; tetrahedra++)
+            for (var tetrahedra = 0; tetrahedra < _tetrahedronNum; tetrahedra++)
             {
-                int vertexIndex0 = m_Tetrahedra[tetrahedra * 4 + 0];
-                int vertexIndex1 = m_Tetrahedra[tetrahedra * 4 + 1];
-                int vertexIndex2 = m_Tetrahedra[tetrahedra * 4 + 2];
-                int vertexIndex3 = m_Tetrahedra[tetrahedra * 4 + 3];
-                m_NeighborhoodVelocitySum[vertexIndex0] = m_NeighborhoodVelocitySum[vertexIndex0] + m_Velocity[vertexIndex1] + m_Velocity[vertexIndex2] + m_Velocity[vertexIndex3];
-                m_NeighborhoodVelocitySum[vertexIndex1] = m_NeighborhoodVelocitySum[vertexIndex1] + m_Velocity[vertexIndex0] + m_Velocity[vertexIndex2] + m_Velocity[vertexIndex3];
-                m_NeighborhoodVelocitySum[vertexIndex2] = m_NeighborhoodVelocitySum[vertexIndex2] + m_Velocity[vertexIndex0] + m_Velocity[vertexIndex1] + m_Velocity[vertexIndex3];
-                m_NeighborhoodVelocitySum[vertexIndex3] = m_NeighborhoodVelocitySum[vertexIndex3] + m_Velocity[vertexIndex0] + m_Velocity[vertexIndex1] + m_Velocity[vertexIndex2];
-                m_NeighborhoodNum[vertexIndex0] += 3;
-                m_NeighborhoodNum[vertexIndex1] += 3;
-                m_NeighborhoodNum[vertexIndex2] += 3;
-                m_NeighborhoodNum[vertexIndex3] += 3;
+                var vertexIndex0 = _tetrahedron[tetrahedra * 4 + 0];
+                var vertexIndex1 = _tetrahedron[tetrahedra * 4 + 1];
+                var vertexIndex2 = _tetrahedron[tetrahedra * 4 + 2];
+                var vertexIndex3 = _tetrahedron[tetrahedra * 4 + 3];
+                _neighborhoodVelocitySum[vertexIndex0] = _neighborhoodVelocitySum[vertexIndex0] +
+                                                         _velocity[vertexIndex1] + _velocity[vertexIndex2] +
+                                                         _velocity[vertexIndex3];
+                _neighborhoodVelocitySum[vertexIndex1] = _neighborhoodVelocitySum[vertexIndex1] +
+                                                         _velocity[vertexIndex0] + _velocity[vertexIndex2] +
+                                                         _velocity[vertexIndex3];
+                _neighborhoodVelocitySum[vertexIndex2] = _neighborhoodVelocitySum[vertexIndex2] +
+                                                         _velocity[vertexIndex0] + _velocity[vertexIndex1] +
+                                                         _velocity[vertexIndex3];
+                _neighborhoodVelocitySum[vertexIndex3] = _neighborhoodVelocitySum[vertexIndex3] +
+                                                         _velocity[vertexIndex0] + _velocity[vertexIndex1] +
+                                                         _velocity[vertexIndex2];
+                _neighborhoodNum[vertexIndex0] += 3;
+                _neighborhoodNum[vertexIndex1] += 3;
+                _neighborhoodNum[vertexIndex2] += 3;
+                _neighborhoodNum[vertexIndex3] += 3;
             }
 
-            for (int i = 0; i < m_VertexNum; i++)
+            for (var i = 0; i < _vertexNum; i++)
             {
-                m_Velocity[i] = m_Velocity[i] * (1 - velocitySmoothWeight) + m_NeighborhoodVelocitySum[i] / m_NeighborhoodNum[i] * velocitySmoothWeight;
-                m_Position[i] += m_Velocity[i] * TimeStep;
+                _velocity[i] = _velocity[i] * (1 - velocitySmoothWeight) +
+                               _neighborhoodVelocitySum[i] / _neighborhoodNum[i] * velocitySmoothWeight;
+                _position[i] += _velocity[i] * DT;
 
-                if (m_Position[i].y < -2.95)
+                if (_position[i].y < -2.95)
                 {
-                    if (m_Velocity[i].y >= 0) return;
+                    if (_velocity[i].y >= 0) return;
 
-                    Vector3 collisionVertexVelocityN = new Vector3(0, m_Velocity[i].y, 0);
-                    Vector3 collisionVertexVelocityT = m_Velocity[i] - collisionVertexVelocityN;
+                    var collisionVertexVelocityN = new Vector3(0, _velocity[i].y, 0);
+                    var collisionVertexVelocityT = _velocity[i] - collisionVertexVelocityN;
 
-                    float a = Mathf.Max(1 - CollisionRestitutionT * (1 + CollisionRestitutionN) * collisionVertexVelocityN.magnitude / collisionVertexVelocityT.magnitude, 0);
+                    var a = Mathf.Max(
+                        1 - CollisionRestitutionT * (1 + CollisionRestitutionN) * collisionVertexVelocityN.magnitude /
+                        collisionVertexVelocityT.magnitude, 0);
                     collisionVertexVelocityN *= -CollisionRestitutionN;
                     collisionVertexVelocityT *= a;
 
-                    m_Velocity[i] = collisionVertexVelocityN + collisionVertexVelocityT;
-                    m_Position[i].y = -2.94f;
+                    _velocity[i] = collisionVertexVelocityN + collisionVertexVelocityT;
+                    _position[i].y = -2.94f;
                 }
             }
         }
 
-        void Update()
+        private void Update()
         {
-            for (int l = 0; l < 10; l++)
+            for (var l = 0; l < 10; l++)
                 _Update();
 
             // Dump the vertex array for rendering.
-            Vector3[] vertices = new Vector3[m_TetrahedraNum * 12];
-            Color[] colors = new Color[m_TetrahedraNum * 12];
-            int vertex_number = 0;
-            for(int tetrahedra = 0; tetrahedra < m_TetrahedraNum; tetrahedra++)
+            var vertices = new Vector3[_tetrahedronNum * 12];
+            var colors = new Color[_tetrahedronNum * 12];
+            var vertexNumber = 0;
+            for (var tetrahedron = 0; tetrahedron < _tetrahedronNum; tetrahedron++)
             {
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 0]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 2]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 2]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 1]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 1]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 0]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 3]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 3]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 2]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 2]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 0]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 0]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 1]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 1]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 3]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 3]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 1]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 1]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 2]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 2]];
-                colors[vertex_number] = m_VertexColor[m_Tetrahedra[tetrahedra * 4 + 3]];
-                vertices[vertex_number++] = m_Position[m_Tetrahedra[tetrahedra * 4 + 3]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 0]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 2]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 1]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 0]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 3]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 2]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 0]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 1]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 3]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 1]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 2]];
+                colors[vertexNumber] = _vertexColor[_tetrahedron[tetrahedron * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tetrahedron * 4 + 3]];
             }
-            Mesh mesh = GetComponent<MeshFilter>().mesh;
+
+            var mesh = GetComponent<MeshFilter>().mesh;
             mesh.vertices = vertices;
             mesh.colors = colors;
             mesh.RecalculateNormals();

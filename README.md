@@ -38,8 +38,15 @@ For any point X in the reference,its deformed correspondence is :
 
 $$x = FX+c$$
 
-$F = \partial x/\partial X$ *,known as `deformation gradient`*
+*`deformation gradient`*
+
+$F = \partial x/\partial X$ 
+
+*`Green Strain`*
 
 $$G=\frac{1}{2} (F^{T} F-I)=\frac{1}{2} (VD^{2}V^{T}-I)=\begin{bmatrix} \varepsilon _{uu}   & \varepsilon _{uv}  \\ \varepsilon _{vu}   & \varepsilon _{vv} \end{bmatrix}$$  
 
-*`Green Strain`*
+*`Total energy*
+
+$E = \int W(G)dA = A^{ref} W(\varepsilon _{uu} ,\varepsilon _{vv},\varepsilon _{uv})$
+

@@ -14,8 +14,8 @@ namespace FiniteElementMethod
         private const float Stiffness1 = 5000.0f;
         private const float Damp = 0.999f;
 
-        private int[] _tet;
-        private int _tetNumber; //The number of tetrahedron
+        private int[] _tetrahedron;
+        private int _tetrahedronNumber;
         private Vector3[] _force;
 
         // ReSharper disable once InconsistentNaming
@@ -41,15 +41,15 @@ namespace FiniteElementMethod
                 var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
 
-                _tetNumber = int.Parse(strings[0]);
-                _tet = new int[_tetNumber * 4];
+                _tetrahedronNumber = int.Parse(strings[0]);
+                _tetrahedron = new int[_tetrahedronNumber * 4];
 
-                for (var tet = 0; tet < _tetNumber; tet++)
+                for (var tet = 0; tet < _tetrahedronNumber; tet++)
                 {
-                    _tet[tet * 4 + 0] = int.Parse(strings[tet * 5 + 4]) - 1;
-                    _tet[tet * 4 + 1] = int.Parse(strings[tet * 5 + 5]) - 1;
-                    _tet[tet * 4 + 2] = int.Parse(strings[tet * 5 + 6]) - 1;
-                    _tet[tet * 4 + 3] = int.Parse(strings[tet * 5 + 7]) - 1;
+                    _tetrahedron[tet * 4 + 0] = int.Parse(strings[tet * 5 + 4]) - 1;
+                    _tetrahedron[tet * 4 + 1] = int.Parse(strings[tet * 5 + 5]) - 1;
+                    _tetrahedron[tet * 4 + 2] = int.Parse(strings[tet * 5 + 6]) - 1;
+                    _tetrahedron[tet * 4 + 3] = int.Parse(strings[tet * 5 + 7]) - 1;
                 }
             }
             {
@@ -77,29 +77,29 @@ namespace FiniteElementMethod
             }
             
             //Create triangle mesh.
-            var vertices = new Vector3[_tetNumber * 12];
+            var vertices = new Vector3[_tetrahedronNumber * 12];
             var vertexNumber = 0;
-            for (var tet = 0; tet < _tetNumber; tet++)
+            for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
 
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
 
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
 
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
             }
 
-            var triangles = new int[_tetNumber * 12];
-            for (var t = 0; t < _tetNumber * 4; t++)
+            var triangles = new int[_tetrahedronNumber * 12];
+            for (var t = 0; t < _tetrahedronNumber * 4; t++)
             {
                 triangles[t * 3 + 0] = t * 3 + 0;
                 triangles[t * 3 + 1] = t * 3 + 1;
@@ -118,8 +118,8 @@ namespace FiniteElementMethod
             _vNum = new int[_number];
 
             //TODO: Need to allocate and assign inv_Dm
-            _invDm = new Matrix4x4[_tetNumber]; //初始的位置矩阵
-            for (var tet = 0; tet < _tetNumber; tet++)
+            _invDm = new Matrix4x4[_tetrahedronNumber]; //初始的位置矩阵
+            for (var tet = 0; tet < _tetrahedronNumber; tet++)
                 _invDm[tet] = BuildEdgeMatrix(tet).inverse;
         }
 
@@ -129,22 +129,22 @@ namespace FiniteElementMethod
                 _Update();
 
             // Dump the vertex array for rendering.
-            var vertices = new Vector3[_tetNumber * 12];
+            var vertices = new Vector3[_tetrahedronNumber * 12];
             var vertexNumber = 0;
-            for (var tet = 0; tet < _tetNumber; tet++)
+            for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tet[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
             }
 
             var mesh = GetComponent<MeshFilter>().mesh;
@@ -160,19 +160,19 @@ namespace FiniteElementMethod
         {
             var ret = Matrix4x4.zero;
             //TODO: Need to build edge matrix here.
-            ret[0, 0] = X[_tet[tet * 4 + 1]].x - X[_tet[tet * 4 + 0]].x;
-            ret[1, 0] = X[_tet[tet * 4 + 1]].y - X[_tet[tet * 4 + 0]].y;
-            ret[2, 0] = X[_tet[tet * 4 + 1]].z - X[_tet[tet * 4 + 0]].z;
+            ret[0, 0] = X[_tetrahedron[tet * 4 + 1]].x - X[_tetrahedron[tet * 4 + 0]].x;
+            ret[1, 0] = X[_tetrahedron[tet * 4 + 1]].y - X[_tetrahedron[tet * 4 + 0]].y;
+            ret[2, 0] = X[_tetrahedron[tet * 4 + 1]].z - X[_tetrahedron[tet * 4 + 0]].z;
             ret[3, 0] = 0;
 
-            ret[0, 1] = X[_tet[tet * 4 + 2]].x - X[_tet[tet * 4 + 0]].x;
-            ret[1, 1] = X[_tet[tet * 4 + 2]].y - X[_tet[tet * 4 + 0]].y;
-            ret[2, 1] = X[_tet[tet * 4 + 2]].z - X[_tet[tet * 4 + 0]].z;
+            ret[0, 1] = X[_tetrahedron[tet * 4 + 2]].x - X[_tetrahedron[tet * 4 + 0]].x;
+            ret[1, 1] = X[_tetrahedron[tet * 4 + 2]].y - X[_tetrahedron[tet * 4 + 0]].y;
+            ret[2, 1] = X[_tetrahedron[tet * 4 + 2]].z - X[_tetrahedron[tet * 4 + 0]].z;
             ret[3, 1] = 0;
 
-            ret[0, 2] = X[_tet[tet * 4 + 3]].x - X[_tet[tet * 4 + 0]].x;
-            ret[1, 2] = X[_tet[tet * 4 + 3]].y - X[_tet[tet * 4 + 0]].y;
-            ret[2, 2] = X[_tet[tet * 4 + 3]].z - X[_tet[tet * 4 + 0]].z;
+            ret[0, 2] = X[_tetrahedron[tet * 4 + 3]].x - X[_tetrahedron[tet * 4 + 0]].x;
+            ret[1, 2] = X[_tetrahedron[tet * 4 + 3]].y - X[_tetrahedron[tet * 4 + 0]].y;
+            ret[2, 2] = X[_tetrahedron[tet * 4 + 3]].z - X[_tetrahedron[tet * 4 + 0]].z;
             ret[3, 2] = 0;
 
             ret[0, 3] = 0;
@@ -191,18 +191,18 @@ namespace FiniteElementMethod
                 _vNum[i] = 0;
             }
 
-            for (var tet = 0; tet < _tetNumber; tet++)
+            for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                var sum = V[_tet[tet * 4 + 0]] + V[_tet[tet * 4 + 1]] + V[_tet[tet * 4 + 2]] +
-                          V[_tet[tet * 4 + 3]];
-                _vSum[_tet[tet * 4 + 0]] += sum;
-                _vSum[_tet[tet * 4 + 1]] += sum;
-                _vSum[_tet[tet * 4 + 2]] += sum;
-                _vSum[_tet[tet * 4 + 3]] += sum;
-                _vNum[_tet[tet * 4 + 0]] += 4;
-                _vNum[_tet[tet * 4 + 1]] += 4;
-                _vNum[_tet[tet * 4 + 2]] += 4;
-                _vNum[_tet[tet * 4 + 3]] += 4;
+                var sum = V[_tetrahedron[tet * 4 + 0]] + V[_tetrahedron[tet * 4 + 1]] + V[_tetrahedron[tet * 4 + 2]] +
+                          V[_tetrahedron[tet * 4 + 3]];
+                _vSum[_tetrahedron[tet * 4 + 0]] += sum;
+                _vSum[_tetrahedron[tet * 4 + 1]] += sum;
+                _vSum[_tetrahedron[tet * 4 + 2]] += sum;
+                _vSum[_tetrahedron[tet * 4 + 3]] += sum;
+                _vNum[_tetrahedron[tet * 4 + 0]] += 4;
+                _vNum[_tetrahedron[tet * 4 + 1]] += 4;
+                _vNum[_tetrahedron[tet * 4 + 2]] += 4;
+                _vNum[_tetrahedron[tet * 4 + 3]] += 4;
             }
 
             for (var i = 0; i < _number; i++)
@@ -226,7 +226,7 @@ namespace FiniteElementMethod
                 _force[i] = new Vector3(0, -9.8f * Mass, 0);
             }
 
-            for (var tet = 0; tet < _tetNumber; tet++)
+            for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
                 //TODO: Deformation Gradient
                 // ReSharper disable once InconsistentNaming
@@ -260,19 +260,19 @@ namespace FiniteElementMethod
                 for (var i = 0; i < 4; i++)
                 for (var j = 0; j < 4; j++)
                     force[i, j] = -1 * volume * force[i, j];
-                _force[_tet[tet * 4 + 1]].x += force[0, 0];
-                _force[_tet[tet * 4 + 1]].y += force[1, 0];
-                _force[_tet[tet * 4 + 1]].z += force[2, 0];
-                _force[_tet[tet * 4 + 2]].x += force[0, 1];
-                _force[_tet[tet * 4 + 2]].y += force[1, 1];
-                _force[_tet[tet * 4 + 2]].z += force[2, 1];
-                _force[_tet[tet * 4 + 3]].x += force[0, 2];
-                _force[_tet[tet * 4 + 3]].y += force[1, 2];
-                _force[_tet[tet * 4 + 3]].z += force[2, 2];
+                _force[_tetrahedron[tet * 4 + 1]].x += force[0, 0];
+                _force[_tetrahedron[tet * 4 + 1]].y += force[1, 0];
+                _force[_tetrahedron[tet * 4 + 1]].z += force[2, 0];
+                _force[_tetrahedron[tet * 4 + 2]].x += force[0, 1];
+                _force[_tetrahedron[tet * 4 + 2]].y += force[1, 1];
+                _force[_tetrahedron[tet * 4 + 2]].z += force[2, 1];
+                _force[_tetrahedron[tet * 4 + 3]].x += force[0, 2];
+                _force[_tetrahedron[tet * 4 + 3]].y += force[1, 2];
+                _force[_tetrahedron[tet * 4 + 3]].z += force[2, 2];
 
-                _force[_tet[tet * 4 + 0]].x -= (force[0, 0] + force[0, 1] + force[0, 2]);
-                _force[_tet[tet * 4 + 0]].y -= (force[1, 0] + force[1, 1] + force[1, 2]);
-                _force[_tet[tet * 4 + 0]].z -= (force[2, 0] + force[2, 1] + force[2, 2]);
+                _force[_tetrahedron[tet * 4 + 0]].x -= (force[0, 0] + force[0, 1] + force[0, 2]);
+                _force[_tetrahedron[tet * 4 + 0]].y -= (force[1, 0] + force[1, 1] + force[1, 2]);
+                _force[_tetrahedron[tet * 4 + 0]].z -= (force[2, 0] + force[2, 1] + force[2, 2]);
             }
 
 
