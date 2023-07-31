@@ -54,5 +54,18 @@ $$E = \int W(G)dA = A^{ref} W(\varepsilon _{uu} ,\varepsilon _{vv},\varepsilon _
 
 $$W(\varepsilon _{uu} ,\varepsilon _{vv},\varepsilon _{uv})=\frac{\lambda }{2} (\varepsilon _{uu}+\varepsilon _{vv})^{2}+\mu (\varepsilon _{uu}+\varepsilon _{vv}+\varepsilon _{uv})^{2} $$
 
+*`Second Piola-Kirchhoff stress tensor`*
 
+$$2\mu G+\lambda trace(G)I =S$$
 
+*`f1`*
+
+$$f_{1} =-A^{ref} FS\begin{bmatrix}a \\b\end{bmatrix}$$
+
+*`$\begin{bmatrix} f1  &f2 \end{bmatrix}$`*
+
+$$\begin{bmatrix}
+f1  &f2
+\end{bmatrix}=-A^{ref} FS\begin{bmatrix}
+X_{10}  &X_{20}
+\end{bmatrix}^{-T} $$
