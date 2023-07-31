@@ -66,3 +66,8 @@ f1  &f2
 \end{bmatrix}=-A^{ref} FS\begin{bmatrix}
 X_{10}  &X_{20}
 \end{bmatrix}^{-T} $$
+
+*`Force`*
+
+$$f_{0} = -\frac{\sigma }{6} (x_{10}\times x_{20}+ x_{20}\times x_{30}+x_{30}\times x_{10} )$$
+
