@@ -23,7 +23,7 @@ $v^{[1]} = v^{[0]} +\Delta  t \mathbf{M} ^{-1}f^{[1]}$
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
 
-https://github.com/rainwl/CG-GMP-PBCA/issues/2#issue-1829312805
+https://user-images.githubusercontent.com/51992995/257252627-176caa0e-24a0-4d70-b230-ce17a0c01aee.mp4
 
 First simulate the object as a simple particle system,each vertex has its own
 x and v,and the v is under the influence of gravity.
