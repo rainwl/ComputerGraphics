@@ -33,4 +33,4 @@ Finally,implement the `Laplacian smoothing` over the vertex velocities.
 
 $x = FX+c$
 
-$F = \partial x/\partial X$
+$F = \partial x/\partial X$ ,known as `deformation gradient`
