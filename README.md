@@ -6,9 +6,10 @@
 ## Contents
 
 ### Rigid Body Dynamics Solver based on Impulse
-`RigidBody` `Impulse`
+`RigidBody` `Dynamics` `Impulse`
 
-[https://github.com/rainwl/CG-GMP-PBCA/issues/1#issue-1812139717](https://user-images.githubusercontent.com/51992995/254614281-93e7a466-45c4-4569-a100-1eb618431330.mp4)
+[https://github.com/rainwl/CG-GMP-PBCA/issues/3#issue-1829466736](https://user-images.githubusercontent.com/51992995/257269338-6fc142b8-b077-4721-8e05-a8e5701f8f5f.mp4)
+
 
 For every vertex $x_{i}  \gets   x +Rr_{i} $ 
 
@@ -41,8 +42,6 @@ $$ j\gets K^{-1}(v_{i}^{new} -v_{i}) $$
 $$v\gets v+\frac{1}{M}j $$
 
 $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
-
-![](https://pic4rain.oss-cn-beijing.aliyuncs.com/img/RBD_algorithm.png)
 
 
 ### Implicit Integration Cloth Solver
