@@ -31,9 +31,9 @@ $$v_{i}^{new} \gets v_{N,i}^{new}+v_{T,i}^{new}$$
 `compute the impluse j`
 
 
-$$ K \gets \frac{1}{M}I-(Rr_{i})^{*}I^{-1}(Rr_{i})^{*} $$
+$$ K \gets \frac{1}{M}I-(Rr_{i})^{\ast }I^{-1}(Rr_{i})^{\ast } $$
 
-$$ K \gets \frac{1}{M}I-(Rr_{i})^{*}I^{-1}(Rr_{i})^{*} $$
+$$ j\gets K^{-1}(v_{i}^{new} -v_{i}) $$
 
 
 `Update v and w`
