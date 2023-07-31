@@ -42,7 +42,8 @@ namespace FiniteElementMethod
         private void Start()
         {
             {
-                var fileContent = File.ReadAllText("Assets/Resources/house2.ele");
+                //var fileContent = File.ReadAllText("Assets/Resources/house2.ele");
+                var fileContent = File.ReadAllText(Application.streamingAssetsPath+"/house2.ele");
                 var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
 
@@ -58,7 +59,8 @@ namespace FiniteElementMethod
                 }
             }
             {
-                var fileContent = File.ReadAllText("Assets/Resources/house2.node");
+                //var fileContent = File.ReadAllText("Assets/Resources/house2.node");
+                var fileContent = File.ReadAllText(Application.streamingAssetsPath+"/house2.node");
                 var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
                 _vertexNum = int.Parse(strings[0]);
