@@ -58,11 +58,6 @@ $$W(\varepsilon _{uu} ,\varepsilon _{vv},\varepsilon _{uv})=\frac{\lambda }{2} (
 
 $$2\mu G+\lambda trace(G)I =S$$
 
-*`f1`*
-
-$$f_{1} =-A^{ref} FS\begin{bmatrix}
-a \\b
-\end{bmatrix}$$
 
 *`[f1 f2]`*
 
