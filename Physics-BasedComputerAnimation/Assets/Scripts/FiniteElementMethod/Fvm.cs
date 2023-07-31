@@ -17,18 +17,15 @@ namespace FiniteElementMethod
         private int[] _tetrahedron;
         private int _tetrahedronNumber;
         private Vector3[] _force;
-
-        // ReSharper disable once InconsistentNaming
-        private Vector3[] V;
-
-        // ReSharper disable once InconsistentNaming
-        private Vector3[] X;
-        private int _number; //The number of vertices
+        private Vector3[] _velocity;
+        private Vector3[] _position;
+        
+        private int _vertexNum;
         private Matrix4x4[] _invDm;
 
         //For Laplacian smoothing.
-        private Vector3[] _vSum;
-        private int[] _vNum;
+        private Vector3[] _neighborhoodVelocitySum;
+        private int[] _neighborhoodNum;
 
         #endregion
 
@@ -44,35 +41,35 @@ namespace FiniteElementMethod
                 _tetrahedronNumber = int.Parse(strings[0]);
                 _tetrahedron = new int[_tetrahedronNumber * 4];
 
-                for (var tet = 0; tet < _tetrahedronNumber; tet++)
+                for (var tetrahedron = 0; tetrahedron < _tetrahedronNumber; tetrahedron++)
                 {
-                    _tetrahedron[tet * 4 + 0] = int.Parse(strings[tet * 5 + 4]) - 1;
-                    _tetrahedron[tet * 4 + 1] = int.Parse(strings[tet * 5 + 5]) - 1;
-                    _tetrahedron[tet * 4 + 2] = int.Parse(strings[tet * 5 + 6]) - 1;
-                    _tetrahedron[tet * 4 + 3] = int.Parse(strings[tet * 5 + 7]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 0] = int.Parse(strings[tetrahedron * 5 + 4]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 1] = int.Parse(strings[tetrahedron * 5 + 5]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 2] = int.Parse(strings[tetrahedron * 5 + 6]) - 1;
+                    _tetrahedron[tetrahedron * 4 + 3] = int.Parse(strings[tetrahedron * 5 + 7]) - 1;
                 }
             }
             {
                 var fileContent = File.ReadAllText("Assets/Resources/house2.node");
                 var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
-                _number = int.Parse(strings[0]);
-                X = new Vector3[_number];
-                for (var i = 0; i < _number; i++)
+                _vertexNum = int.Parse(strings[0]);
+                _position = new Vector3[_vertexNum];
+                for (var i = 0; i < _vertexNum; i++)
                 {
-                    X[i].x = float.Parse(strings[i * 5 + 5]) * 0.4f;
-                    X[i].y = float.Parse(strings[i * 5 + 6]) * 0.4f;
-                    X[i].z = float.Parse(strings[i * 5 + 7]) * 0.4f;
+                    _position[i].x = float.Parse(strings[i * 5 + 5]) * 0.4f;
+                    _position[i].y = float.Parse(strings[i * 5 + 6]) * 0.4f;
+                    _position[i].z = float.Parse(strings[i * 5 + 7]) * 0.4f;
                 }
 
                 //Centralize the model.
                 var center = Vector3.zero;
-                for (var i = 0; i < _number; i++) center += X[i];
-                center /= _number;
-                for (var i = 0; i < _number; i++)
+                for (var i = 0; i < _vertexNum; i++) center += _position[i];
+                center /= _vertexNum;
+                for (var i = 0; i < _vertexNum; i++)
                 {
-                    X[i] -= center;
-                    (X[i].y, X[i].z) = (X[i].z, X[i].y);
+                    _position[i] -= center;
+                    (_position[i].y, _position[i].z) = (_position[i].z, _position[i].y);
                 }
             }
             
@@ -81,21 +78,21 @@ namespace FiniteElementMethod
             var vertexNumber = 0;
             for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 1]];
 
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 2]];
 
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 3]];
 
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 3]];
             }
 
             var triangles = new int[_tetrahedronNumber * 12];
@@ -112,13 +109,13 @@ namespace FiniteElementMethod
             mesh.RecalculateNormals();
 
 
-            V = new Vector3[_number];
-            _force = new Vector3[_number];
-            _vSum = new Vector3[_number];
-            _vNum = new int[_number];
+            _velocity = new Vector3[_vertexNum];
+            _force = new Vector3[_vertexNum];
+            _neighborhoodVelocitySum = new Vector3[_vertexNum];
+            _neighborhoodNum = new int[_vertexNum];
 
             //TODO: Need to allocate and assign inv_Dm
-            _invDm = new Matrix4x4[_tetrahedronNumber]; //初始的位置矩阵
+            _invDm = new Matrix4x4[_tetrahedronNumber]; 
             for (var tet = 0; tet < _tetrahedronNumber; tet++)
                 _invDm[tet] = BuildEdgeMatrix(tet).inverse;
         }
@@ -133,18 +130,18 @@ namespace FiniteElementMethod
             var vertexNumber = 0;
             for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 0]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 1]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 2]];
-                vertices[vertexNumber++] = X[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 0]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 3]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 1]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 2]];
+                vertices[vertexNumber++] = _position[_tetrahedron[tet * 4 + 3]];
             }
 
             var mesh = GetComponent<MeshFilter>().mesh;
@@ -160,19 +157,19 @@ namespace FiniteElementMethod
         {
             var ret = Matrix4x4.zero;
             //TODO: Need to build edge matrix here.
-            ret[0, 0] = X[_tetrahedron[tet * 4 + 1]].x - X[_tetrahedron[tet * 4 + 0]].x;
-            ret[1, 0] = X[_tetrahedron[tet * 4 + 1]].y - X[_tetrahedron[tet * 4 + 0]].y;
-            ret[2, 0] = X[_tetrahedron[tet * 4 + 1]].z - X[_tetrahedron[tet * 4 + 0]].z;
+            ret[0, 0] = _position[_tetrahedron[tet * 4 + 1]].x - _position[_tetrahedron[tet * 4 + 0]].x;
+            ret[1, 0] = _position[_tetrahedron[tet * 4 + 1]].y - _position[_tetrahedron[tet * 4 + 0]].y;
+            ret[2, 0] = _position[_tetrahedron[tet * 4 + 1]].z - _position[_tetrahedron[tet * 4 + 0]].z;
             ret[3, 0] = 0;
 
-            ret[0, 1] = X[_tetrahedron[tet * 4 + 2]].x - X[_tetrahedron[tet * 4 + 0]].x;
-            ret[1, 1] = X[_tetrahedron[tet * 4 + 2]].y - X[_tetrahedron[tet * 4 + 0]].y;
-            ret[2, 1] = X[_tetrahedron[tet * 4 + 2]].z - X[_tetrahedron[tet * 4 + 0]].z;
+            ret[0, 1] = _position[_tetrahedron[tet * 4 + 2]].x - _position[_tetrahedron[tet * 4 + 0]].x;
+            ret[1, 1] = _position[_tetrahedron[tet * 4 + 2]].y - _position[_tetrahedron[tet * 4 + 0]].y;
+            ret[2, 1] = _position[_tetrahedron[tet * 4 + 2]].z - _position[_tetrahedron[tet * 4 + 0]].z;
             ret[3, 1] = 0;
 
-            ret[0, 2] = X[_tetrahedron[tet * 4 + 3]].x - X[_tetrahedron[tet * 4 + 0]].x;
-            ret[1, 2] = X[_tetrahedron[tet * 4 + 3]].y - X[_tetrahedron[tet * 4 + 0]].y;
-            ret[2, 2] = X[_tetrahedron[tet * 4 + 3]].z - X[_tetrahedron[tet * 4 + 0]].z;
+            ret[0, 2] = _position[_tetrahedron[tet * 4 + 3]].x - _position[_tetrahedron[tet * 4 + 0]].x;
+            ret[1, 2] = _position[_tetrahedron[tet * 4 + 3]].y - _position[_tetrahedron[tet * 4 + 0]].y;
+            ret[2, 2] = _position[_tetrahedron[tet * 4 + 3]].z - _position[_tetrahedron[tet * 4 + 0]].z;
             ret[3, 2] = 0;
 
             ret[0, 3] = 0;
@@ -185,29 +182,29 @@ namespace FiniteElementMethod
 
         private void SmoothV()
         {
-            for (var i = 0; i < _number; i++)
+            for (var i = 0; i < _vertexNum; i++)
             {
-                _vSum[i] = new Vector3(0, 0, 0);
-                _vNum[i] = 0;
+                _neighborhoodVelocitySum[i] = new Vector3(0, 0, 0);
+                _neighborhoodNum[i] = 0;
             }
 
             for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                var sum = V[_tetrahedron[tet * 4 + 0]] + V[_tetrahedron[tet * 4 + 1]] + V[_tetrahedron[tet * 4 + 2]] +
-                          V[_tetrahedron[tet * 4 + 3]];
-                _vSum[_tetrahedron[tet * 4 + 0]] += sum;
-                _vSum[_tetrahedron[tet * 4 + 1]] += sum;
-                _vSum[_tetrahedron[tet * 4 + 2]] += sum;
-                _vSum[_tetrahedron[tet * 4 + 3]] += sum;
-                _vNum[_tetrahedron[tet * 4 + 0]] += 4;
-                _vNum[_tetrahedron[tet * 4 + 1]] += 4;
-                _vNum[_tetrahedron[tet * 4 + 2]] += 4;
-                _vNum[_tetrahedron[tet * 4 + 3]] += 4;
+                var sum = _velocity[_tetrahedron[tet * 4 + 0]] + _velocity[_tetrahedron[tet * 4 + 1]] + _velocity[_tetrahedron[tet * 4 + 2]] +
+                          _velocity[_tetrahedron[tet * 4 + 3]];
+                _neighborhoodVelocitySum[_tetrahedron[tet * 4 + 0]] += sum;
+                _neighborhoodVelocitySum[_tetrahedron[tet * 4 + 1]] += sum;
+                _neighborhoodVelocitySum[_tetrahedron[tet * 4 + 2]] += sum;
+                _neighborhoodVelocitySum[_tetrahedron[tet * 4 + 3]] += sum;
+                _neighborhoodNum[_tetrahedron[tet * 4 + 0]] += 4;
+                _neighborhoodNum[_tetrahedron[tet * 4 + 1]] += 4;
+                _neighborhoodNum[_tetrahedron[tet * 4 + 2]] += 4;
+                _neighborhoodNum[_tetrahedron[tet * 4 + 3]] += 4;
             }
 
-            for (var i = 0; i < _number; i++)
+            for (var i = 0; i < _vertexNum; i++)
             {
-                V[i] = 0.9f * V[i] + 0.1f * _vSum[i] / _vNum[i];
+                _velocity[i] = 0.9f * _velocity[i] + 0.1f * _neighborhoodVelocitySum[i] / _neighborhoodNum[i];
             }
         }
 
@@ -216,11 +213,11 @@ namespace FiniteElementMethod
             // Jump up.
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                for (var i = 0; i < _number; i++)
-                    V[i].y += 0.2f;
+                for (var i = 0; i < _vertexNum; i++)
+                    _velocity[i].y += 0.2f;
             }
 
-            for (var i = 0; i < _number; i++)
+            for (var i = 0; i < _vertexNum; i++)
             {
                 // Add gravity to Force.
                 _force[i] = new Vector3(0, -9.8f * Mass, 0);
@@ -278,17 +275,17 @@ namespace FiniteElementMethod
 
             SmoothV();
 
-            for (var i = 0; i < _number; i++)
+            for (var i = 0; i < _vertexNum; i++)
             {
                 //TODO: Update X and V here.
-                V[i] = (V[i] + DT * _force[i] / Mass) * Damp;
-                X[i] += V[i] * DT;
+                _velocity[i] = (_velocity[i] + DT * _force[i] / Mass) * Damp;
+                _position[i] += _velocity[i] * DT;
                 //TODO: (Particle) collision with floor.
-                if (X[i].y < -3f) //这里仅对局部坐标进行相应判断，选取-3的原因是底部物体的世界坐标是-3
+                if (_position[i].y < -3f) //这里仅对局部坐标进行相应判断，选取-3的原因是底部物体的世界坐标是-3
                 {
-                    X[i].y = -3f;
-                    if (V[i].y < 0)
-                        V[i].y = -V[i].y;
+                    _position[i].y = -3f;
+                    if (_velocity[i].y < 0)
+                        _velocity[i].y = -_velocity[i].y;
                 }
             }
         }

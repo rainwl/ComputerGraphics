@@ -35,9 +35,7 @@ namespace FiniteElementMethod
         //For Laplacian smoothing.
         private Vector3[] _vSum;
         private int[] _vNum;
-
-        SVD _svd = new SVD();
-
+        
         #endregion
 
         #region Unity Methods
@@ -46,7 +44,7 @@ namespace FiniteElementMethod
         {
             {
                 var fileContent = File.ReadAllText("Assets/Resources/house2.ele");
-                var strings = fileContent.Split(new char[] { ' ', '\t', '\r', '\n' },
+                var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
 
                 _tetNumber = int.Parse(strings[0]);
@@ -62,7 +60,7 @@ namespace FiniteElementMethod
             }
             {
                 var fileContent = File.ReadAllText("Assets/Resources/house2.node");
-                var strings = fileContent.Split(new char[] { ' ', '\t', '\r', '\n' },
+                var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
                 _number = int.Parse(strings[0]);
                 X = new Vector3[_number];
