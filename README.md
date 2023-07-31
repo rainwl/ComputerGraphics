@@ -22,7 +22,7 @@ $$v_{T,i}\gets v_{i}-v_{N,i}$$
 
 $$a\gets max(1-\mu T(1+ \mu_{N})\left \| V_{N,i} \right \| / \left \| V_{T,i} \right \| ,0)$$
 
-$$v_{N,i}^{new} \gets - \mu _{N} V_{N,i}$$
+$$v_{N,i}^{new} \gets - \mu_{N} V_{N,i}$$
 
 $$v_{T,i}^{new} \gets av_{T,i}$$
 
@@ -30,9 +30,11 @@ $$v_{i}^{new} \gets v_{N,i}^{new}+v_{T,i}^{new}$$
 
 `compute the impluse j`
 
+
 $$ K \gets \frac{1}{M}I-(Rr_{i})^{*}I^{-1}(Rr_{i})^{*} $$
 
 $$ K \gets \frac{1}{M}I-(Rr_{i})^{*}I^{-1}(Rr_{i})^{*} $$
+
 
 `Update v and w`
 
