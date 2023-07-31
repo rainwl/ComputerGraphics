@@ -60,7 +60,10 @@ $$2\mu G+\lambda trace(G)I =S$$
 
 *`f1`*
 
-$$f_{1} =-A^{ref} FS\begin{bmatrix}a \\ b \end{bmatrix}$$
+$$f_{1} =-A^{ref} FS\begin{bmatrix}
+a \\b
+
+\end{bmatrix}$$
 
 *`[f1 f2]`*
 
