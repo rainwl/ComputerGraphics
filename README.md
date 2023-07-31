@@ -29,6 +29,8 @@ Then we calculate the edge matrix of a tetrahedron.And based on the FEM,
 calculate the `deformation gradient` F and the `Green Strain`G,and the 
 `Second Piola-Kirchhoff stress`S,and finally the forces of 4 vertices.
 
-Finally,implement the `Laplacian smoothing` over the vertex velocities
+Finally,implement the `Laplacian smoothing` over the vertex velocities.
 
 $x = FX+c$
+
+$F = \partial x/\partial X$
