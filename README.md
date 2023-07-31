@@ -18,3 +18,17 @@
 ### Implicit Integration Cloth Solver
 
 $v^{[1]} = v^{[0]} +\Delta  t \mathbf{M} ^{-1}f^{[1]}$
+
+### Finite Element Method
+`St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
+
+First simulate the object as a simple particle system,each vertex has its own
+x and v,and the v is under the influence of gravity.
+
+Then we calculate the edge matrix of a tetrahedron.And based on the FEM,
+calculate the `deformation gradient` F and the `Green Strain`G,and the 
+`Second Piola-Kirchhoff stress`S,and finally the forces of 4 vertices.
+
+Finally,implement the `Laplacian smoothing` over the vertex velocities
+
+$x = FX+c$
