@@ -10,10 +10,33 @@
 
 [https://github.com/rainwl/CG-GMP-PBCA/issues/1#issue-1812139717](https://user-images.githubusercontent.com/51992995/254614281-93e7a466-45c4-4569-a100-1eb618431330.mp4)
 
-For every vertex $x_{i}  \gets   x +Rr_{i} $
+For every vertex $x_{i}  \gets   x +Rr_{i} $ , if $\phi (x_{i})<0$
 
+$v_{i}\gets v+\omega \times Rr_{i}$ , if $v_{i}\cdot N<0$
 
+$$v_{N,i}\gets ( v_{i} \cdot N)N$$
 
+$$v_{T,i}\gets v_{i}-v_{N,i}$$
+
+$$a\gets max(1-\mu T(1+ \mu_{N})\left \| V_{N,i} \right \| / \left \| V_{T,i} \right \| ,0)$$
+
+$$v_{N,i}^{new} \gets -\mu _{N}V_{N,i}$$
+
+$$v_{T,i}^{new} \gets av_{T,i}$$
+
+$$v_{i}^{new} \gets v_{N,i}^{new}+v_{T,i}^{new}$$
+
+`compute the impluse j`
+
+$$K\gets \frac{1}{M}I-(Rr_{i})^{*}I^{-1}(Rr_{i})^{*}$$
+
+$$K\gets \frac{1}{M}I-(Rr_{i})^{*}I^{-1}(Rr_{i})^{*}$$
+
+`Update v and w`
+
+$$v\gets v+\frac{1}{M}j $$
+
+$$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 
 ![](https://pic4rain.oss-cn-beijing.aliyuncs.com/img/RBD_algorithm.png)
 
