@@ -12,6 +12,7 @@
 
 [https://github.com/rainwl/CG-GMP-PBCA/issues/1#issue-1812139717](https://user-images.githubusercontent.com/51992995/254614281-93e7a466-45c4-4569-a100-1eb618431330.mp4)
 
+
 ![](https://pic4rain.oss-cn-beijing.aliyuncs.com/img/RBD_algorithm.png)
 
 
@@ -21,6 +22,8 @@ $v^{[1]} = v^{[0]} +\Delta  t \mathbf{M} ^{-1}f^{[1]}$
 
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
+
+https://github.com/rainwl/CG-GMP-PBCA/issues/2#issue-1829312805
 
 First simulate the object as a simple particle system,each vertex has its own
 x and v,and the v is under the influence of gravity.
