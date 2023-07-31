@@ -1,5 +1,3 @@
-[TOC]
-
 # CG-GMP-PBCA
 `Computer Graphics`
 `Geometry Modeling And Processing`
@@ -8,10 +6,11 @@
 ## Contents
 
 ### Rigid Body Dynamics Solver based on Impulse
-`Physics-Based Computer Animation/Assets/Scenes/RigidBodyDynamics.unity`
+`RigidBody` `Impulse`
 
 [https://github.com/rainwl/CG-GMP-PBCA/issues/1#issue-1812139717](https://user-images.githubusercontent.com/51992995/254614281-93e7a466-45c4-4569-a100-1eb618431330.mp4)
 
+For every vertex $x_{i}  \gets   x +Rr_{i} $
 
 
 
