@@ -40,13 +40,19 @@ $$x = FX+c$$
 
 *`deformation gradient`*
 
-$F = \partial x/\partial X$ 
+$$F = \partial x/\partial X$$ 
 
 *`Green Strain`*
 
 $$G=\frac{1}{2} (F^{T} F-I)=\frac{1}{2} (VD^{2}V^{T}-I)=\begin{bmatrix} \varepsilon _{uu}   & \varepsilon _{uv}  \\ \varepsilon _{vu}   & \varepsilon _{vv} \end{bmatrix}$$  
 
-*`Total energy*
+*`Total energy`*
 
-$E = \int W(G)dA = A^{ref} W(\varepsilon _{uu} ,\varepsilon _{vv},\varepsilon _{uv})$
+$$E = \int W(G)dA = A^{ref} W(\varepsilon _{uu} ,\varepsilon _{vv},\varepsilon _{uv})$$
+
+*`Saint Venant-Kirchhoff Model`*
+
+$$W(\varepsilon _{uu} ,\varepsilon _{vv},\varepsilon _{uv})=\frac{\lambda }{2} (\varepsilon _{uu}+\varepsilon _{vv})^{2}+\mu (\varepsilon _{uu}+\varepsilon _{vv}+\varepsilon _{uv})^{2} $$
+
+
 
