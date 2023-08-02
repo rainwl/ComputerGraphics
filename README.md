@@ -8,6 +8,8 @@
 ### Rigid Body Dynamics Solver based on Impulse
 `RigidBody` `Dynamics` `Impulse`
 
+![https://github.com/rainwl/CG-GMP-PBCA/issues/6#issue-1832234015](https://user-images.githubusercontent.com/51992995/257672696-50282f6e-5fe3-4ae3-8dc2-1909cf375361.gif)
+
 [https://github.com/rainwl/CG-GMP-PBCA/issues/3#issue-1829466736](https://user-images.githubusercontent.com/51992995/257269338-6fc142b8-b077-4721-8e05-a8e5701f8f5f.mp4)
 
 
