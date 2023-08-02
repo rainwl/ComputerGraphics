@@ -19,7 +19,7 @@ namespace FiniteElementMethod
         private Vector3[] _force;
         private Vector3[] _velocity;
         private Vector3[] _position;
-        
+
         private int _vertexNum;
         private Matrix4x4[] _invDm;
 
@@ -34,7 +34,7 @@ namespace FiniteElementMethod
         private void Start()
         {
             {
-                var fileContent = File.ReadAllText("Assets/Resources/house2.ele");
+                var fileContent = File.ReadAllText(Application.streamingAssetsPath+"/house2.ele");
                 var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
 
@@ -50,7 +50,7 @@ namespace FiniteElementMethod
                 }
             }
             {
-                var fileContent = File.ReadAllText("Assets/Resources/house2.node");
+                var fileContent = File.ReadAllText(Application.streamingAssetsPath+"/house2.node");
                 var strings = fileContent.Split(new[] { ' ', '\t', '\r', '\n' },
                     StringSplitOptions.RemoveEmptyEntries);
                 _vertexNum = int.Parse(strings[0]);
@@ -72,7 +72,7 @@ namespace FiniteElementMethod
                     (_position[i].y, _position[i].z) = (_position[i].z, _position[i].y);
                 }
             }
-            
+
             //Create triangle mesh.
             var vertices = new Vector3[_tetrahedronNumber * 12];
             var vertexNumber = 0;
@@ -115,13 +115,15 @@ namespace FiniteElementMethod
             _neighborhoodNum = new int[_vertexNum];
 
             //TODO: Need to allocate and assign inv_Dm
-            _invDm = new Matrix4x4[_tetrahedronNumber]; 
+            _invDm = new Matrix4x4[_tetrahedronNumber];
             for (var tet = 0; tet < _tetrahedronNumber; tet++)
                 _invDm[tet] = BuildEdgeMatrix(tet).inverse;
         }
 
         private void Update()
         {
+            // Since this project uses a relatively small time step,
+            // the Update function calls Update ten times.
             for (var l = 0; l < 10; l++)
                 _Update();
 
@@ -153,10 +155,15 @@ namespace FiniteElementMethod
 
         #region Private Methods
 
+        /// <summary>
+        /// return the edge matrix of a tetrahedron
+        /// </summary>
+        /// <param name="tet"></param>
+        /// <returns></returns>
         private Matrix4x4 BuildEdgeMatrix(int tet)
         {
             var ret = Matrix4x4.zero;
-            //TODO: Need to build edge matrix here.
+            // Need to build edge matrix here.
             ret[0, 0] = _position[_tetrahedron[tet * 4 + 1]].x - _position[_tetrahedron[tet * 4 + 0]].x;
             ret[1, 0] = _position[_tetrahedron[tet * 4 + 1]].y - _position[_tetrahedron[tet * 4 + 0]].y;
             ret[2, 0] = _position[_tetrahedron[tet * 4 + 1]].z - _position[_tetrahedron[tet * 4 + 0]].z;
@@ -180,8 +187,12 @@ namespace FiniteElementMethod
             return ret;
         }
 
+        /// <summary>
+        /// Laplacian smoothing
+        /// </summary>
         private void SmoothV()
         {
+            // neighborhood Velocity Sum and Num
             for (var i = 0; i < _vertexNum; i++)
             {
                 _neighborhoodVelocitySum[i] = new Vector3(0, 0, 0);
@@ -190,7 +201,8 @@ namespace FiniteElementMethod
 
             for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                var sum = _velocity[_tetrahedron[tet * 4 + 0]] + _velocity[_tetrahedron[tet * 4 + 1]] + _velocity[_tetrahedron[tet * 4 + 2]] +
+                var sum = _velocity[_tetrahedron[tet * 4 + 0]] + _velocity[_tetrahedron[tet * 4 + 1]] +
+                          _velocity[_tetrahedron[tet * 4 + 2]] +
                           _velocity[_tetrahedron[tet * 4 + 3]];
                 _neighborhoodVelocitySum[_tetrahedron[tet * 4 + 0]] += sum;
                 _neighborhoodVelocitySum[_tetrahedron[tet * 4 + 1]] += sum;
@@ -217,41 +229,58 @@ namespace FiniteElementMethod
                     _velocity[i].y += 0.2f;
             }
 
+            // Add gravity to Force
             for (var i = 0; i < _vertexNum; i++)
             {
-                // Add gravity to Force.
                 _force[i] = new Vector3(0, -9.8f * Mass, 0);
             }
 
+            // F G S forces
             for (var tet = 0; tet < _tetrahedronNumber; tet++)
             {
-                //TODO: Deformation Gradient
+                #region Deformation Gradient
+
                 // ReSharper disable once InconsistentNaming
                 var F = BuildEdgeMatrix(tet) * _invDm[tet];
-                //TODO: Green Strain
+
+                #endregion
+                
+                #region Green Strain
+
                 // ReSharper disable once InconsistentNaming
                 var G = F.transpose * F;
                 for (var i = 0; i < 4; i++)
-                for (var j = 0; j < 4; j++)
                 {
-                    if (i == j)
-                        G[i, j] -= 1;
-                    G[i, j] = 0.5f * G[i, j];
+                    for (var j = 0; j < 4; j++)
+                    {
+                        if (i == j)
+                            G[i, j] -= 1;
+                        G[i, j] = 0.5f * G[i, j];
+                    }
                 }
 
-                //TODO: Second PK Stress
+                #endregion
+
+                #region Second PK Stress
+
                 // ReSharper disable once InconsistentNaming
                 var S = Matrix4x4.zero;
                 var traceG = G[0, 0] + G[1, 1] + G[2, 2];
                 for (var i = 0; i < 4; i++)
-                for (var j = 0; j < 4; j++)
                 {
-                    S[i, j] = 2 * Stiffness1 * G[i, j];
-                    if (i == j)
-                        S[i, j] += Stiffness0 * traceG;
+                    for (var j = 0; j < 4; j++)
+                    {
+                        S[i, j] = 2 * Stiffness1 * G[i, j];
+                        if (i == j)
+                            S[i, j] += Stiffness0 * traceG;
+                    }
                 }
+                
 
-                //TODO: Elastic Force
+                #endregion
+
+                #region Elastic Force
+
                 var force = F * S * _invDm[tet].transpose;
                 var volume = 1 / (_invDm[tet].determinant * 6); //注意下这里体积公式 S=||A||/6  S=1/(6*||A^-1||)
                 for (var i = 0; i < 4; i++)
@@ -270,18 +299,26 @@ namespace FiniteElementMethod
                 _force[_tetrahedron[tet * 4 + 0]].x -= (force[0, 0] + force[0, 1] + force[0, 2]);
                 _force[_tetrahedron[tet * 4 + 0]].y -= (force[1, 0] + force[1, 1] + force[1, 2]);
                 _force[_tetrahedron[tet * 4 + 0]].z -= (force[2, 0] + force[2, 1] + force[2, 2]);
+
+                #endregion
+                
             }
 
 
+            // Laplacian smoothing
             SmoothV();
 
+            // update x and v
             for (var i = 0; i < _vertexNum; i++)
             {
-                //TODO: Update X and V here.
+                // frictional contact
                 _velocity[i] = (_velocity[i] + DT * _force[i] / Mass) * Damp;
                 _position[i] += _velocity[i] * DT;
-                //TODO: (Particle) collision with floor.
-                if (_position[i].y < -3f) //这里仅对局部坐标进行相应判断，选取-3的原因是底部物体的世界坐标是-3
+                // (Particle) collision with floor.
+                // Here, only the local coordinates are judged accordingly,
+                // and the reason for choosing -3 is that the world coordinate of the bottom object is -3
+                // ReSharper disable once InvertIf
+                if (_position[i].y < -3f)
                 {
                     _position[i].y = -3f;
                     if (_velocity[i].y < 0)
