@@ -13,6 +13,7 @@
 [https://github.com/rainwl/CG-GMP-PBCA/issues/3#issue-1829466736](https://user-images.githubusercontent.com/51992995/257269338-6fc142b8-b077-4721-8e05-a8e5701f8f5f.mp4)
 
 
+
 For every vertex $x_{i}  \gets   x +Rr_{i} $ 
 
 if $\phi (x_{i})<0$
@@ -47,6 +48,8 @@ $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 
 ### Position-Based Dynamics
 `PBD` `Cloth`
+
+![](https://pic4rain.oss-cn-beijing.aliyuncs.com/img/PBD.gif)
 
 [https://github.com/rainwl/CG-GMP-PBCA/issues/4#issue-1829485434](https://user-images.githubusercontent.com/51992995/257270994-6ce00eb6-43e7-49ad-af84-e6f59dfa214a.mp4)
 
