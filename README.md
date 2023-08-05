@@ -8,9 +8,8 @@
 ### Rigid Body Dynamics Solver based on Impulse
 `RigidBody` `Dynamics` `Impulse`
 
-![https://github.com/rainwl/CG-GMP-PBCA/issues/6#issue-1832234015](https://user-images.githubusercontent.com/51992995/257672696-50282f6e-5fe3-4ae3-8dc2-1909cf375361.gif)
+![https://github.com/rainwl/CG-GMP-PBCA/issues/12#issue-1837572878](https://user-images.githubusercontent.com/51992995/258563389-cfa6657d-8476-46c9-93ec-f1d80a01fed3.gif)
 
-[https://github.com/rainwl/CG-GMP-PBCA/issues/3#issue-1829466736](https://user-images.githubusercontent.com/51992995/257269338-6fc142b8-b077-4721-8e05-a8e5701f8f5f.mp4)
 
 
 
@@ -49,9 +48,8 @@ $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 ### Position-Based Dynamics
 `PBD` `Cloth`
 
-![](https://pic4rain.oss-cn-beijing.aliyuncs.com/img/PBD.gif)
+![https://github.com/rainwl/CG-GMP-PBCA/issues/10#issue-1837554865](https://user-images.githubusercontent.com/51992995/258560892-91bf53f2-1130-48eb-82af-83646a1ca358.gif)
 
-[https://github.com/rainwl/CG-GMP-PBCA/issues/4#issue-1829485434](https://user-images.githubusercontent.com/51992995/257270994-6ce00eb6-43e7-49ad-af84-e6f59dfa214a.mp4)
 
 For k = 0...K
 
@@ -77,14 +75,17 @@ $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 
 ### Implicit Integration Cloth Solver
 
+![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
+
+
+
 $v^{[1]} = v^{[0]} +\Delta  t \mathbf{M} ^{-1}f^{[1]}$
 
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
 
-https://github.com/rainwl/CG-GMP-PBCA/issues/9#issue-1837076168
+![https://github.com/rainwl/CG-GMP-PBCA/issues/9#issue-1837076168](https://user-images.githubusercontent.com/51992995/258483475-240e3026-d414-4937-a532-a434bd07317a.gif)
 
-[https://github.com/rainwl/CG-GMP-PBCA/issues/2#issue-1829312805](https://user-images.githubusercontent.com/51992995/257252627-176caa0e-24a0-4d70-b230-ce17a0c01aee.mp4)
 
 First simulate the object as a simple particle system,each vertex has its own
 x and v,and the v is under the influence of gravity.
