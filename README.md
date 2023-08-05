@@ -136,3 +136,6 @@ X_{10}  &X_{20}
 
 $$f_{0} = -\frac{\sigma }{6} (x_{10}\times x_{20}+ x_{20}\times x_{30}+x_{30}\times x_{10} )$$
 
+### Two-way Coupling Shallow Wave
+
+![https://github.com/rainwl/CG-GMP-PBCA/issues/13#issue-1837585974](https://user-images.githubusercontent.com/51992995/258565200-a8c4c031-15ae-4ffa-a589-f34cd95bcffd.gif)
