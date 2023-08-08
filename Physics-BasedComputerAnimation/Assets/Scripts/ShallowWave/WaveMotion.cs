@@ -261,8 +261,7 @@ namespace ShallowWave
 
         private void ShallowWave(float[,] old_h, float[,] h, float[,] new_h)
         {
-            //Step 1:
-            //TODO: Compute new_h based on the shallow wave model.
+            // TODO: Compute new_h based on the shallow wave model.
 
             for (var i = 0; i < size; i++)
             for (var j = 0; j < size; j++)
