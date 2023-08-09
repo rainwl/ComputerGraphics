@@ -139,3 +139,14 @@ $$f_{0} = -\frac{\sigma }{6} (x_{10}\times x_{20}+ x_{20}\times x_{30}+x_{30}\ti
 ### Two-way Coupling Shallow Wave
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/13#issue-1837585974](https://user-images.githubusercontent.com/51992995/258565200-a8c4c031-15ae-4ffa-a589-f34cd95bcffd.gif)
+
+`shallow wave equation`
+
+$$\frac{d^{2}h }{dt^{2}}=\frac{h}{\rho }  \frac{d^{2}p}{dx^{2}} $$
+
+
+`Volume Preservation`
+
+$$\sum h_{i}(t+\Delta t)=V+\frac{\Delta t^{2}H}{\Delta x^{2}\rho } \sum (P_{i-1}-P_{i})(P_{i+1}-P_{i})$$
+
+
