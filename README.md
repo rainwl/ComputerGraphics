@@ -84,7 +84,7 @@ $$g=\frac{1}{\Delta t^{2}}M(x-\tilde{x}) -f(x)$$
 
 `loop through each edge`
 
-$$\left\{\begin{matrix} g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j})\\g_{j}\gets g_{j}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j})\end{matrix}\right.$$
+$$g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j}),g_{j}\gets g_{j}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )$$
 
 `update`
 
