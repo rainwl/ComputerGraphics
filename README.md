@@ -90,6 +90,12 @@ $$\left\{\begin{matrix} g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \
 
 $$x_{i}\gets x_{i}-(\frac{1}{\Delta t^{2}}m_{i}+4k )^{-1}g_{i}$$
 
+`colliding and apply impulse`
+
+$$v_{i}\gets v_{i}+\frac{1}{\Delta t}(c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| }-x_{i} )$$
+
+$$x_{i}\gets c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| } $$
+
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
 
