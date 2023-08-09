@@ -78,8 +78,23 @@ $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
 
 
+`gradient`
 
-$v^{[1]} = v^{[0]} +\Delta  t \mathbf{M} ^{-1}f^{[1]}$
+$$g=\frac{1}{\Delta t^{2}}M(x-\tilde{x}) -f(x)$$
+
+`loop through each edge`
+
+$$\left\{\begin{matrix} g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j})\\g_{j}\gets g_{j}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j})\end{matrix}\right.$$
+
+`update`
+
+$$x_{i}\gets x_{i}-(\frac{1}{\Delta t^{2}}m_{i}+4k )^{-1}g_{i}$$
+
+`colliding and apply impulse`
+
+$$v_{i}\gets v_{i}+\frac{1}{\Delta t}(c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| }-x_{i} )$$
+
+$$x_{i}\gets c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| } $$
 
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
