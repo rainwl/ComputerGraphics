@@ -149,4 +149,6 @@ $$\frac{d^{2}h }{dt^{2}}=\frac{h}{\rho }  \frac{d^{2}p}{dx^{2}} $$
 
 $$\sum h_{i}(t+\Delta t)=V+\frac{\Delta t^{2}H}{\Delta x^{2}\rho } \sum (P_{i-1}-P_{i})(P_{i+1}-P_{i})$$
 
+`One-way Coupling`
 
+$$h_{i,j}^{new}\gets  h_{i,j}^{new}+(v_{i-1,j}+v_{i+1,j}+v_{i,j-1}+v_{i,j+1}-4v_{ij})\ast rate$$
