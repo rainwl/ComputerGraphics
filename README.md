@@ -10,6 +10,13 @@
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/12#issue-1837572878](https://user-images.githubusercontent.com/51992995/258563389-cfa6657d-8476-46c9-93ec-f1d80a01fed3.gif)
 
+The goal of simulation is to update the state variable **s**<sup>k</sup> over time.
+And we use `semi-implicit(leapfrog)` approach.
+
+$$v^{[0.5]}=v^{[-0.5]}+\Delta tM^{-1}f^{[0]}$$
+
+$$x^{[1]}=x^{[0]}+\Delta tv^{[0.5]}$$
+
 
 
 
