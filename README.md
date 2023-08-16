@@ -17,6 +17,27 @@ $$v^{[0.5]}=v^{[-0.5]}+\Delta tM^{-1}f^{[0]}$$
 
 $$x^{[1]}=x^{[0]}+\Delta tv^{[0.5]}$$
 
+`Rigid Body Simulation`
+
+$$f_{i}\gets Force(x_{i},v_{i})$$
+
+$$f\gets \sum f_{i}$$
+
+$$v\gets v+\Delta tM^{-1}f$$
+
+$$x\gets x+\Delta tv$$
+
+$$R\gets Matrix.Rotate(q)$$
+
+$$\tau _{i}\gets (Rr_{i})\times f_{i}$$
+
+$$\tau \gets \sum \tau _{i}$$
+
+$$I\gets RI_{ref}R^{T}$$
+
+$$\omega \gets \omega +\Delta t(I)^{-1}\tau $$
+
+$$q\gets q+\begin{bmatrix}0  &\frac{\Delta t}{2} \omega \end{bmatrix}\times q$$
 
 
 
