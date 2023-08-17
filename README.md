@@ -13,6 +13,8 @@
 The goal of simulation is to update the state variable **s**<sup>k</sup> over time.
 And we use `semi-implicit(leapfrog)` approach.
 
+---
+
 $$v^{[0.5]}=v^{[-0.5]}+\Delta tM^{-1}f^{[0]}$$
 
 $$x^{[1]}=x^{[0]}+\Delta tv^{[0.5]}$$
@@ -29,7 +31,7 @@ $$x\gets x+\Delta tv$$
 
 $$R\gets Matrix.Rotate(q)$$
 
-$$\tau _{i}\gets (Rr_{i})\times f_{i}$$
+$$\tau_{i}\gets (Rr_{i})\times f_{i}$$
 
 $$\tau \gets \sum \tau _{i}$$
 
@@ -41,11 +43,15 @@ $$q\gets q+\begin{bmatrix}0  &\frac{\Delta t}{2} \omega \end{bmatrix}\times q$$
 
 
 
-For every vertex $x_{i}  \gets   x +Rr_{i} $ 
+For every vertex 
+
+$$x_{i}  \gets   x +Rr_{i} $$
 
 if $\phi (x_{i})<0$
 
-$v_{i}\gets v+\omega \times Rr_{i}$ , if $v_{i}\cdot N<0$
+$$v_{i}\gets v+\omega \times Rr_{i}$$ 
+
+if $v_{i}\cdot N<0$
 
 $$v_{N,i}\gets ( v_{i} \cdot N)N$$
 
@@ -73,11 +79,52 @@ $$v\gets v+\frac{1}{M}j $$
 
 $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 
+### Shape Matching
+
+First,we move vertices independently by its velocity,with collision and friction being handled.
+
+Second,enforce the rigidity constraint to become a rigid body again.
+
+---
+
+$$\{ c,R \} =argmin\sum_{i}^{}  \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2} $$
+
+$$\{ c,A \} =argmin \sum_{i}^{} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
+
+$$\frac{\partial E}{\partial c} = \sum_{i}^{}c+Ar_{i}-y_{i}= \sum_{i}^{}c-y_{i}=0$$
+
+$$c = \frac{1}{N} \sum_{i}^{} y_{i}$$
+
+$$\frac{\partial E}{\partial A} = \sum_{i}^{}(c+Ar_{i}-y_{i})r_{i}^{T} = 0$$
+
+$$A=( \sum_{i}^{}(y_{i}-c)r_{i}^{T})(\sum_{i}^{}r_{i}r_{i}^{T})^{-1}$$
+
+$$A=RS$$
+
+`R` is `rotation` and `S` is `deformation`
+
+$$A=UDV^{T}$$
+
+$$A=(UV^{T})(VDV^{T})$$
+
+`local deformation` VDV<sup>T</sup> = S
+
+$$R=Polar(A)$$
+
+The polar decomposition is `unique`
+
+For every vertex
+
+$$v_{i}\gets (c+Rr_{i}-x_{i})/\Delta t$$
+
+$$x_{i}\gets c+Rr_{i}$$
+
 ### Position-Based Dynamics
 `PBD` `Cloth`
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/10#issue-1837554865](https://user-images.githubusercontent.com/51992995/258560892-91bf53f2-1130-48eb-82af-83646a1ca358.gif)
 
+---
 
 For k = 0...K
 
@@ -105,6 +152,7 @@ $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
 
+---
 
 `gradient`
 
@@ -182,6 +230,8 @@ $$f_{0} = -\frac{\sigma }{6} (x_{10}\times x_{20}+ x_{20}\times x_{30}+x_{30}\ti
 ### Two-way Coupling Shallow Wave
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/13#issue-1837585974](https://user-images.githubusercontent.com/51992995/258565200-a8c4c031-15ae-4ffa-a589-f34cd95bcffd.gif)
+
+---
 
 `shallow wave equation`
 
