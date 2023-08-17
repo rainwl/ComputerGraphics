@@ -13,6 +13,8 @@
 The goal of simulation is to update the state variable **s**<sup>k</sup> over time.
 And we use `semi-implicit(leapfrog)` approach.
 
+---
+
 $$v^{[0.5]}=v^{[-0.5]}+\Delta tM^{-1}f^{[0]}$$
 
 $$x^{[1]}=x^{[0]}+\Delta tv^{[0.5]}$$
@@ -100,16 +102,12 @@ $$A=RS$$
 $$R=Polar(A)$$
 
 
-
-
-
-
-
 ### Position-Based Dynamics
 `PBD` `Cloth`
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/10#issue-1837554865](https://user-images.githubusercontent.com/51992995/258560892-91bf53f2-1130-48eb-82af-83646a1ca358.gif)
 
+---
 
 For k = 0...K
 
@@ -137,6 +135,7 @@ $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
 
+---
 
 `gradient`
 
@@ -214,6 +213,8 @@ $$f_{0} = -\frac{\sigma }{6} (x_{10}\times x_{20}+ x_{20}\times x_{30}+x_{30}\ti
 ### Two-way Coupling Shallow Wave
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/13#issue-1837585974](https://user-images.githubusercontent.com/51992995/258565200-a8c4c031-15ae-4ffa-a589-f34cd95bcffd.gif)
+
+---
 
 `shallow wave equation`
 
