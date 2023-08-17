@@ -29,7 +29,7 @@ $$x\gets x+\Delta tv$$
 
 $$R\gets Matrix.Rotate(q)$$
 
-$$\tau _{i}\gets (Rr_{i})\times f_{i}$$
+$$\tau_{i}\gets (Rr_{i})\times f_{i}$$
 
 $$\tau \gets \sum \tau _{i}$$
 
