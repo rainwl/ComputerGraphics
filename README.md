@@ -83,7 +83,7 @@ Second,enforce the rigidity constraint to become a rigid body again.
 
 $$\{ c,R \} =argmin\sum_{i}^{}  \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2} $$
 
-$$\left \{ c,A \right \} =argmin {\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
+$$\{ c,A \} =argmin \sum_{i}^{} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
 
 $$\frac{\partial E}{\partial c} = {\textstyle \sum_{i}^{}}c+Ar_{i}-y_{i}= {\textstyle \sum_{i}^{}}c-y_{i}=0$$
 
