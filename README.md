@@ -74,6 +74,7 @@ $$v\gets v+\frac{1}{M}j $$
 $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 
 ### Shape Matching
+safsdaf
 
 $$\left \{ c,R \right \} =argmin {\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
 
