@@ -73,6 +73,32 @@ $$v\gets v+\frac{1}{M}j $$
 
 $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 
+### Shape Matching
+
+$$\left \{ c,R \right \} =argmin {\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
+
+$$\left \{ c,A \right \} =argmin {\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
+
+$$\frac{\partial E}{\partial c} = {\textstyle \sum_{i}^{}}c+Ar_{i}-y_{i}= {\textstyle \sum_{i}^{}}c-y_{i}=0$$
+
+$$c = \frac{1}{N} {\textstyle \sum_{i}^{}} y_{i}$$
+
+$$\frac{\partial E}{\partial A} = {\textstyle \sum_{i}^{}}(c+Ar_{i}-y_{i})r_{i}^{T} = 0$$
+
+$$A=( {\textstyle \sum_{i}^{}}(y_{i}-c)r_{i}^{T})({\textstyle \sum_{i}^{}}r_{i}r_{i}^{T})^{-1}$$
+
+$$A=RS$$
+
+`R` is `rotation` and `S` is `deformation`
+
+$$R=Polar(A)$$
+
+
+
+
+
+
+
 ### Position-Based Dynamics
 `PBD` `Cloth`
 
