@@ -49,7 +49,9 @@ $$x_{i}  \gets   x +Rr_{i} $$
 
 if $\phi (x_{i})<0$
 
-$$v_{i}\gets v+\omega \times Rr_{i}$ , if $v_{i}\cdot N<0$$
+$$v_{i}\gets v+\omega \times Rr_{i}$$ 
+
+if $v_{i}\cdot N<0$
 
 $$v_{N,i}\gets ( v_{i} \cdot N)N$$
 
