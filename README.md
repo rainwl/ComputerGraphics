@@ -81,6 +81,8 @@ $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 
 ### Shape Matching
 
+![https://github.com/rainwl/CG-GMP-PBCA/issues/17#issue-1854939793](https://user-images.githubusercontent.com/51992995/261312764-10d16aa5-800c-4e95-b5cc-1fe3e0caaa59.gif)
+
 First,we move vertices independently by its velocity,with collision and friction being handled.
 
 Second,enforce the rigidity constraint to become a rigid body again.
