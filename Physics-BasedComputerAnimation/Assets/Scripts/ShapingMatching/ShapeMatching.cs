@@ -71,26 +71,26 @@ namespace ShapingMatching
             }
             else
             {
-                float l = I_c * (I_c * I_c - 4.5f * II_c) + 13.5f * III_c;
-                float k_root = Mathf.Sqrt(k);
-                float value = l / (k * k_root);
+                var l = I_c * (I_c * I_c - 4.5f * II_c) + 13.5f * III_c;
+                var k_root = Mathf.Sqrt(k);
+                var value = l / (k * k_root);
                 if (value < -1.0f) value = -1.0f;
                 if (value > 1.0f) value = 1.0f;
-                float phi = Mathf.Acos(value);
-                float lambda2 = (I_c + 2 * k_root * Mathf.Cos(phi / 3)) / 3.0f;
-                float lambda = Mathf.Sqrt(lambda2);
+                var phi = Mathf.Acos(value);
+                var lambda2 = (I_c + 2 * k_root * Mathf.Cos(phi / 3)) / 3.0f;
+                var lambda = Mathf.Sqrt(lambda2);
 
-                float III_u = Mathf.Sqrt(III_c);
+                var III_u = Mathf.Sqrt(III_c);
                 if (det < 0) III_u = -III_u;
-                float I_u = lambda + Mathf.Sqrt(-lambda2 + I_c + 2 * III_u / lambda);
-                float II_u = (I_u * I_u - I_c) * 0.5f;
+                var I_u = lambda + Mathf.Sqrt(-lambda2 + I_c + 2 * III_u / lambda);
+                var II_u = (I_u * I_u - I_c) * 0.5f;
 
 
                 float inv_rate, factor;
                 inv_rate = 1 / (I_u * II_u - III_u);
                 factor = I_u * III_u * inv_rate;
 
-                Matrix4x4 U = Matrix4x4.zero;
+                var U = Matrix4x4.zero;
                 U[0, 0] = factor;
                 U[1, 1] = factor;
                 U[2, 2] = factor;
@@ -107,8 +107,8 @@ namespace ShapingMatching
                 inv_U[2, 2] = factor;
 
                 factor = -I_u * inv_rate;
-                for (int i = 0; i < 3; i++)
-                for (int j = 0; j < 3; j++)
+                for (var i = 0; i < 3; i++)
+                for (var j = 0; j < 3; j++)
                     inv_U[i, j] += factor * U[i, j] + inv_rate * C[i, j];
             }
 
