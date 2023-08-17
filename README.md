@@ -74,9 +74,14 @@ $$v\gets v+\frac{1}{M}j $$
 $$\omega \gets \omega +I^{-1}(Rr_{i}\times j)$$
 
 ### Shape Matching
-safsdaf
 
-$$\left \{ c,R \right \} =argmin {\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
+First,we move vertices independently by its velocity,with collision and friction being handled.
+
+Second,enforce the rigidity constraint to become a rigid body again.
+
+---
+
+$$\left\{c,R\right\} =argmin{\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
 
 $$\left \{ c,A \right \} =argmin {\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
 
