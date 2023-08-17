@@ -44,11 +44,10 @@ $$q\gets q+\begin{bmatrix}0  &\frac{\Delta t}{2} \omega \end{bmatrix}\times q$$
 
 
 For every vertex 
+
 $$x_{i}  \gets   x +Rr_{i} $ $
 
-if 
-
-$$\phi (x_{i})<0$$
+if $\phi (x_{i})<0$
 
 $$v_{i}\gets v+\omega \times Rr_{i}$ , if $v_{i}\cdot N<0$$
 
