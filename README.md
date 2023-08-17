@@ -43,11 +43,14 @@ $$q\gets q+\begin{bmatrix}0  &\frac{\Delta t}{2} \omega \end{bmatrix}\times q$$
 
 
 
-For every vertex $x_{i}  \gets   x +Rr_{i} $ 
+For every vertex 
+$$x_{i}  \gets   x +Rr_{i} $ $
 
-if $\phi (x_{i})<0$
+if 
 
-$v_{i}\gets v+\omega \times Rr_{i}$ , if $v_{i}\cdot N<0$
+$$\phi (x_{i})<0$$
+
+$$v_{i}\gets v+\omega \times Rr_{i}$ , if $v_{i}\cdot N<0$$
 
 $$v_{N,i}\gets ( v_{i} \cdot N)N$$
 
@@ -100,7 +103,6 @@ $$A=RS$$
 `R` is `rotation` and `S` is `deformation`
 
 $$R=Polar(A)$$
-
 
 ### Position-Based Dynamics
 `PBD` `Cloth`
