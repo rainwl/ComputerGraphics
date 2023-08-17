@@ -103,7 +103,21 @@ $$A=RS$$
 
 `R` is `rotation` and `S` is `deformation`
 
+$$A=UDV^{T}$$
+
+$$A=(UV^{T})(VDV^{T})$$
+
+`local deformation` VDV<sup>T</sup> = S
+
 $$R=Polar(A)$$
+
+The polar decomposition is `unique`
+
+For every vertex
+
+$$v_{i}\gets (c+Rr_{i}-x_{i})/\Delta t$$
+
+$$x_{i}\gets c+Rr_{i}$$
 
 ### Position-Based Dynamics
 `PBD` `Cloth`
