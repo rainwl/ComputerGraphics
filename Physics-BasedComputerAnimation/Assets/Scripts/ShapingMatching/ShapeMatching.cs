@@ -1,4 +1,7 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using UnityEngine;
+// ReSharper disable InconsistentNaming
 
 namespace ShapingMatching
 {
@@ -28,14 +31,17 @@ namespace ShapingMatching
         /// </summary>
         /// <param name="matrix"></param>
         /// <returns></returns>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         private static Matrix4x4 Polar(Matrix4x4 matrix)
         {
+            // ReSharper disable once InconsistentNaming
             var C = Matrix4x4.zero;
             for (var ii = 0; ii < 3; ii++)
             for (var jj = 0; jj < 3; jj++)
             for (var kk = 0; kk < 3; kk++)
                 C[ii, jj] += matrix[kk, ii] * matrix[kk, jj];
 
+            // ReSharper disable once InconsistentNaming
             var C2 = Matrix4x4.zero;
             for (var ii = 0; ii < 3; ii++)
             for (var jj = 0; jj < 3; jj++)
@@ -188,16 +194,14 @@ namespace ShapingMatching
             X = mesh.vertices;
             _r = mesh.vertices;
 
-            var c = Vector3.zero;
-            for (var i = 0; i < _r.Length; i++)
-                c += _r[i];
+            var c = _r.Aggregate(Vector3.zero, (current, t) => current + t);
 
             c /= _r.Length;
             for (var i = 0; i < _r.Length; i++)
                 _r[i] -= c;
 
             //Get QQ^t ready.
-            for (int i = 0; i < _r.Length; i++)
+            for (var i = 0; i < _r.Length; i++)
             {
                 _rrt[0, 0] += _r[i][0] * _r[i][0];
                 _rrt[0, 1] += _r[i][0] * _r[i][1];
@@ -213,12 +217,15 @@ namespace ShapingMatching
             _rrt[3, 3] = 1;
 
             //Initial velocity.
-            for (int i = 0; i < X.Length; i++)
+            for (var i = 0; i < X.Length; i++)
                 V[i][0] = 10.0f;
 
-            UpdateMesh(transform.position, Matrix4x4.Rotate(transform.rotation), 0);
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
+            var transform1 = transform;
+            var rot = transform1.rotation;
+            var pos = transform1.position;
+            UpdateMesh(pos, Matrix4x4.Rotate(rot), 0);
+            pos = Vector3.zero;
+            rot = Quaternion.identity;
         }
 
         private void Update()
