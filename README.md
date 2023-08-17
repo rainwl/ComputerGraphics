@@ -85,13 +85,13 @@ $$\{ c,R \} =argmin\sum_{i}^{}  \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vma
 
 $$\{ c,A \} =argmin \sum_{i}^{} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
 
-$$\frac{\partial E}{\partial c} = {\textstyle \sum_{i}^{}}c+Ar_{i}-y_{i}= {\textstyle \sum_{i}^{}}c-y_{i}=0$$
+$$\frac{\partial E}{\partial c} = \sum_{i}^{}c+Ar_{i}-y_{i}= \sum_{i}^{}c-y_{i}=0$$
 
-$$c = \frac{1}{N} {\textstyle \sum_{i}^{}} y_{i}$$
+$$c = \frac{1}{N} \sum_{i}^{} y_{i}$$
 
-$$\frac{\partial E}{\partial A} = {\textstyle \sum_{i}^{}}(c+Ar_{i}-y_{i})r_{i}^{T} = 0$$
+$$\frac{\partial E}{\partial A} = \sum_{i}^{}(c+Ar_{i}-y_{i})r_{i}^{T} = 0$$
 
-$$A=( {\textstyle \sum_{i}^{}}(y_{i}-c)r_{i}^{T})({\textstyle \sum_{i}^{}}r_{i}r_{i}^{T})^{-1}$$
+$$A=( \sum_{i}^{}(y_{i}-c)r_{i}^{T})(\sum_{i}^{}r_{i}r_{i}^{T})^{-1}$$
 
 $$A=RS$$
 
