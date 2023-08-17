@@ -81,7 +81,7 @@ Second,enforce the rigidity constraint to become a rigid body again.
 
 ---
 
-$$\left\{c,R\right\} =argmin{\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
+$$\{ c,R \} =argmin{\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2} $$
 
 $$\left \{ c,A \right \} =argmin {\textstyle \sum_{i}^{}} \frac{1}{2}\begin{Vmatrix}c+Rr_{i}-y_{i}\end{Vmatrix}^{2}$$
 
