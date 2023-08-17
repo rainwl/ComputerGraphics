@@ -45,7 +45,7 @@ $$q\gets q+\begin{bmatrix}0  &\frac{\Delta t}{2} \omega \end{bmatrix}\times q$$
 
 For every vertex 
 
-$$x_{i}  \gets   x +Rr_{i} $ $
+$$x_{i}  \gets   x +Rr_{i} $$
 
 if $\phi (x_{i})<0$
 
