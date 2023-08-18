@@ -121,7 +121,14 @@ $$v_{i}\gets (c+Rr_{i}-x_{i})/\Delta t$$
 
 $$x_{i}\gets c+Rr_{i}$$
 
-### Mass-Spring System(explicit integration)
+### Position-Based Dynamics
+`PBD` `Cloth`
+
+![https://github.com/rainwl/CG-GMP-PBCA/issues/10#issue-1837554865](https://user-images.githubusercontent.com/51992995/258560892-91bf53f2-1130-48eb-82af-83646a1ca358.gif)
+
+---
+
+#### Mass-Spring System(explicit integration)
 
 E:`Edge list`
 
@@ -129,7 +136,7 @@ L: `Edge length list`
 
 `Compute Spring Forces`
 
-For every edge e 
+For every edge e
 
 $$i\gets E[e][0]$$
 
@@ -152,14 +159,6 @@ $$f_{i}\gets Force(x_{i},v_{i})$$
 $$v_{i}\gets v_{i}+\Delta tm_{i}^{-1}f_{i}$$
 
 $$x_{i}\gets x_{i}+\Delta tv_{i}$$
-
-
-
-### Position-Based Dynamics
-`PBD` `Cloth`
-
-![https://github.com/rainwl/CG-GMP-PBCA/issues/10#issue-1837554865](https://user-images.githubusercontent.com/51992995/258560892-91bf53f2-1130-48eb-82af-83646a1ca358.gif)
-
 ---
 
 For k = 0...K
