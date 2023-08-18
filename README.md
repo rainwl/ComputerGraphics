@@ -130,9 +130,12 @@ $$x_{i}\gets c+Rr_{i}$$
 
 #### Mass-Spring System(explicit integration)
 
-E:`Edge list`
+Explicit integration suffers from `numerical instability` caused by `overshooting`,when the 
+`stiffness` k and/or the `time step` dt is too large.
 
-L: `Edge length list`
+Edge list:`E`
+
+Edge length list:`L`
 
 `Compute Spring Forces`
 
@@ -159,6 +162,7 @@ $$f_{i}\gets Force(x_{i},v_{i})$$
 $$v_{i}\gets v_{i}+\Delta tm_{i}^{-1}f_{i}$$
 
 $$x_{i}\gets x_{i}+\Delta tv_{i}$$
+
 ---
 
 For k = 0...K
