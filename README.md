@@ -231,7 +231,7 @@ Initialize x<sup>(0)</sup>
 
 For k = 0...K
 
-$$\Deltax \gets -(F''(x^{(k)}))^{-1}F'(x^{(k)})$$
+$$\Delta x \gets -(F''(x^{(k)}))^{-1}F'(x^{(k)})$$
 
 $$x^{(k+1)}\gets x^{(k)}+\Delta x$$
 
