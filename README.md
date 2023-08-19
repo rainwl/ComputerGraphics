@@ -172,6 +172,7 @@ Implicit integration is a better solution to `numerical instability`.The idea is
 
 
 $$x^{[1]}=x^{[0]}+\Delta tv^{[0]}+\Delta t^{2}M^{-1}f^{[1]}$$
+
 $$v^{[1]}=(x^{[1]}-x^{[0]})/\Delta t$$
 
 
