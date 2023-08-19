@@ -239,8 +239,13 @@ $$x^{[1]}\gets x^{(k+1)}$$
 
 `because`
 
-$$F''(x^{(k)}=\frac{\partial F^{2}(x^{(k)})}{\partial x^{2}} =\frac{1}{\Delta t^{2}} M+H(x^{(k)})$$
+$$F''(x^{(k)})=\frac{\partial F^{2}(x^{(k)})}{\partial x^{2}} =\frac{1}{\Delta t^{2}} M+H(x^{(k)})$$
 
+`so`
+
+the goal is to solve
+
+$$\mathbf{A} \Delta \mathbf{x} =\mathbf{b} $$
 
 
 
