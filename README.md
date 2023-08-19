@@ -237,6 +237,9 @@ $$x^{(k+1)}\gets x^{(k)}+\Delta x$$
 
 $$x^{[1]}\gets x^{(k+1)}$$
 
+`because`
+
+$$F''(x^{(k)}=\frac{\partial F^{2}(x^{(k)})}{\partial x^{2}} =\frac{1}{\Delta t^{2}} M+H(x^{(k)})$$
 
 
 
