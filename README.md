@@ -219,6 +219,24 @@ $$x^{[1]}-x^{[0]}-\Delta tv^{[0]}-\Delta t^{2}M^{-1}f(x^{[1]})=0$$
 
 $$x^{[1]}=argminF(x)$$
 
+F(x) is `Lipschitz continuous`
+
+`goal`
+
+$$0=F'(x)\approx F'(x^{(k)})+F''(x^{(k)})(x-x^{(k)})$$
+
+`Newton's method`
+
+Initialize x<sup>(0)</sup>
+
+For k = 0...K
+
+$$\Delta \gets -(F''(x^{(k)}))^{-1}F'(x^{(k)})$$
+
+$$x^{(k+1)}\gets x^{(k)}+\Delta x$$
+
+$$x^{[1]}\gets x^{(k+1)}$$
+
 
 
 
