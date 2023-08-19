@@ -165,6 +165,25 @@ $$x_{i}\gets x_{i}+\Delta tv_{i}$$
 
 ---
 
+#### Mass-Spring System(implicit integration)
+
+Implicit integration is a better solution to `numerical instability`.The idea is to integrate both `x` and `v` implicitly.
+
+
+
+$$x^{[1]}=x^{[0]}+\Delta tv^{[0]}+\Delta t^{2}M^{-1}f^{[1]}$$
+$$v^{[1]}=(x^{[1]}-x^{[0]})/\Delta t$$
+
+
+
+
+
+
+
+
+
+---
+
 For k = 0...K
 
 For every vertex i
