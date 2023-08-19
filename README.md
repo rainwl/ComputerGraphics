@@ -231,7 +231,7 @@ Initialize x<sup>(0)</sup>
 
 For k = 0...K
 
-$$\Delta \gets -(F''(x^{(k)}))^{-1}F'(x^{(k)})$$
+$$\Deltax \gets -(F''(x^{(k)}))^{-1}F'(x^{(k)})$$
 
 $$x^{(k+1)}\gets x^{(k)}+\Delta x$$
 
@@ -246,6 +246,8 @@ $$x^{[1]}\gets x^{(k+1)}$$
 
 
 ---
+
+`PBD`
 
 For k = 0...K
 
