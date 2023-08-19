@@ -169,12 +169,26 @@ $$x_{i}\gets x_{i}+\Delta tv_{i}$$
 
 Implicit integration is a better solution to `numerical instability`.The idea is to integrate both `x` and `v` implicitly.
 
+We should note that it is implicit integration that can `overcome` overshooting,overshooting is overcome by error attenuation.
 
+And `solving equations` is a special case of `optimization problem`.
+
+`traditional`
+
+$$v^{[1]}=v^{[0]}+\Delta tM^{-1}f^{[1]}$$
+
+$$x^{[1]}=x^{[0]}+\Delta tv^{[1]}$$
+
+`or`
 
 $$x^{[1]}=x^{[0]}+\Delta tv^{[0]}+\Delta t^{2}M^{-1}f^{[1]}$$
 
 $$v^{[1]}=(x^{[1]}-x^{[0]})/\Delta t$$
 
+
+Assuming that `f` is *holonomic* (only depends on position).depending on `x` only,our question is how to solve:
+
+$$x^{[1]}=x^{[0]}+\Delta tv^{[0]}+\Delta t^{2}M^{-1}f(x^{[1]})$$
 
 
 
