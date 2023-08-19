@@ -198,7 +198,7 @@ $$x^{[1]}=argminF(x)$$
 
 $$F(x)=\frac{1}{2\Delta t^{2}} \begin{Vmatrix}x-x^{[0]}-\Delta tv^{[0]}\end{Vmatrix}_{M}^{2}+E(x)$$
 
-$$$\begin{Vmatrix}x\end{Vmatrix}^{2}_{M}=x^{T}Mx$
+$$\begin{Vmatrix}x\end{Vmatrix}^{2}_{M}=x^{T}Mx$$
 
 `because`
 
