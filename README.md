@@ -248,6 +248,32 @@ the goal is to solve
 $$\mathbf{A} \Delta \mathbf{x} =\mathbf{b} $$
 
 
+---
+
+`Jocobi`
+
+$$\Delta x\gets 0$$
+
+For k= 0...K
+
+`r` residual error
+
+$$r\gets b-A\Delta x$$
+
+if
+
+`convergence condition`
+
+$$\begin{Vmatrix}r\end{Vmatrix}<\varepsilon $$
+
+break
+
+`diagnonal of A` D
+
+$$\Delta x\gets \Delta x+\alpha D^{-1}r$$
+
+---
+`Chebyshev Accleration`
 
 
 
