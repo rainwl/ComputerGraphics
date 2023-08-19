@@ -211,8 +211,13 @@ $$x^{[1]}-x^{[0]}-\Delta tv^{[0]}-\Delta t^{2}M^{-1}f(x^{[1]})=0$$
 `Note` that this is applicable to every system,not just a mass-spring system.
 
 
+---
 
+#### Newton-Raphson Method
 
+`optimization problem`
+
+$$x^{[1]}=argminF(x)$$
 
 
 
