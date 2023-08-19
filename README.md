@@ -190,6 +190,31 @@ Assuming that `f` is *holonomic* (only depends on position).depending on `x` onl
 
 $$x^{[1]}=x^{[0]}+\Delta tv^{[0]}+\Delta t^{2}M^{-1}f(x^{[1]})$$
 
+They are equivalent:
+
+$$x^{[1]}=argminF(x)$$
+
+`for`
+
+$$F(x)=\frac{1}{2\Delta t^{2}} \begin{Vmatrix}x-x^{[0]}-\Delta tv^{[0]}\end{Vmatrix}_{M}^{2}+E(x)$$
+
+$$$\begin{Vmatrix}x\end{Vmatrix}^{2}_{M}=x^{T}Mx$
+
+`because`
+
+$$\nabla F(x^{[1]})=\frac{1}{\Delta t^{2}}M(x^{[1]}-x^{[0]}-\Delta tv^{[0]})-f(x^{[1]})=0 $$
+
+`equivalent`
+
+$$x^{[1]}-x^{[0]}-\Delta tv^{[0]}-\Delta t^{2}M^{-1}f(x^{[1]})=0$$
+
+`Note` that this is applicable to every system,not just a mass-spring system.
+
+
+
+
+
+
 
 
 
