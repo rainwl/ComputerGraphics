@@ -276,9 +276,6 @@ $$\Delta x\gets \Delta x+\alpha D^{-1}r$$
 `Chebyshev Accleration`
 
 
-
-
-
 ---
 
 `PBD`
