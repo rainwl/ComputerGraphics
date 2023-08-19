@@ -128,6 +128,158 @@ $$x_{i}\gets c+Rr_{i}$$
 
 ---
 
+#### Mass-Spring System(explicit integration)
+
+Explicit integration suffers from `numerical instability` caused by `overshooting`,when the 
+`stiffness` k and/or the `time step` dt is too large.
+
+Edge list:`E`
+
+Edge length list:`L`
+
+`Compute Spring Forces`
+
+For every edge e
+
+$$i\gets E[e][0]$$
+
+$$j\gets E[e][1]$$
+
+$$L_{e}\gets L[e]$$
+
+$$f\gets -k(\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e})\frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}} $$
+
+$$f_{i}\gets f_{i}+f$$
+
+$$f_{j}\gets f_{j}-f$$
+
+`A Particle System`
+
+For every vertex
+
+$$f_{i}\gets Force(x_{i},v_{i})$$
+
+$$v_{i}\gets v_{i}+\Delta tm_{i}^{-1}f_{i}$$
+
+$$x_{i}\gets x_{i}+\Delta tv_{i}$$
+
+---
+
+#### Mass-Spring System(implicit integration)
+
+Implicit integration is a better solution to `numerical instability`.The idea is to integrate both `x` and `v` implicitly.
+
+We should note that it is implicit integration that can `overcome` overshooting,overshooting is overcome by error attenuation.
+
+And `solving equations` is a special case of `optimization problem`.
+
+`traditional`
+
+$$v^{[1]}=v^{[0]}+\Delta tM^{-1}f^{[1]}$$
+
+$$x^{[1]}=x^{[0]}+\Delta tv^{[1]}$$
+
+`or`
+
+$$x^{[1]}=x^{[0]}+\Delta tv^{[0]}+\Delta t^{2}M^{-1}f^{[1]}$$
+
+$$v^{[1]}=(x^{[1]}-x^{[0]})/\Delta t$$
+
+
+Assuming that `f` is *holonomic* (only depends on position).depending on `x` only,our question is how to solve:
+
+$$x^{[1]}=x^{[0]}+\Delta tv^{[0]}+\Delta t^{2}M^{-1}f(x^{[1]})$$
+
+They are equivalent:
+
+$$x^{[1]}=argminF(x)$$
+
+`for`
+
+$$F(x)=\frac{1}{2\Delta t^{2}} \begin{Vmatrix}x-x^{[0]}-\Delta tv^{[0]}\end{Vmatrix}_{M}^{2}+E(x)$$
+
+$$\begin{Vmatrix}x\end{Vmatrix}^{2}_{M}=x^{T}Mx$$
+
+`because`
+
+$$\nabla F(x^{[1]})=\frac{1}{\Delta t^{2}}M(x^{[1]}-x^{[0]}-\Delta tv^{[0]})-f(x^{[1]})=0 $$
+
+`equivalent`
+
+$$x^{[1]}-x^{[0]}-\Delta tv^{[0]}-\Delta t^{2}M^{-1}f(x^{[1]})=0$$
+
+`Note` that this is applicable to every system,not just a mass-spring system.
+
+
+---
+
+#### Newton-Raphson Method
+
+`optimization problem`
+
+$$x^{[1]}=argminF(x)$$
+
+F(x) is `Lipschitz continuous`
+
+`goal`
+
+$$0=F'(x)\approx F'(x^{(k)})+F''(x^{(k)})(x-x^{(k)})$$
+
+`Newton's method`
+
+Initialize x<sup>(0)</sup>
+
+For k = 0...K
+
+$$\Delta x \gets -(F''(x^{(k)}))^{-1}F'(x^{(k)})$$
+
+$$x^{(k+1)}\gets x^{(k)}+\Delta x$$
+
+$$x^{[1]}\gets x^{(k+1)}$$
+
+`because`
+
+$$F''(x^{(k)})=\frac{\partial F^{2}(x^{(k)})}{\partial x^{2}} =\frac{1}{\Delta t^{2}} M+H(x^{(k)})$$
+
+`so`
+
+the goal is to solve
+
+$$\mathbf{A} \Delta \mathbf{x} =\mathbf{b} $$
+
+
+---
+
+`Jocobi`
+
+$$\Delta x\gets 0$$
+
+For k= 0...K
+
+`r` residual error
+
+$$r\gets b-A\Delta x$$
+
+if
+
+`convergence condition`
+
+$$\begin{Vmatrix}r\end{Vmatrix}<\varepsilon $$
+
+break
+
+`diagnonal of A` D
+
+$$\Delta x\gets \Delta x+\alpha D^{-1}r$$
+
+---
+`Chebyshev Accleration`
+
+
+---
+
+`PBD`
+
 For k = 0...K
 
 For every vertex i
