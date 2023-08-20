@@ -129,6 +129,29 @@ $$x_{i}\gets c+Rr_{i}$$
 ---
 
 
+`PBD`
+
+For k = 0...K
+
+For every vertex i
+
+$$x_{i}^{new}\gets  \vec{0} $$
+
+$$n_{i}\gets  \vec{0} $$
+
+For every edge e = {i,j}
+
+$$x_{i}^{new} \gets x_{i}^{new} + x_{i}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
+
+$$x_{j}^{new} \gets x_{j}^{new} + x_{j}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
+
+$$n_{i}\gets n_{i}+1$$
+
+$$n_{j}\gets n_{j}+1$$
+
+For every vertex i
+
+$$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 
 ### Implicit Integration Cloth Solver
 
@@ -307,29 +330,6 @@ $$\Delta x\gets \Delta x+\alpha D^{-1}r$$
 
 ---
 
-`PBD`
-
-For k = 0...K
-
-For every vertex i
-
-$$x_{i}^{new}\gets  \vec{0} $$
-
-$$n_{i}\gets  \vec{0} $$
-
-For every edge e = {i,j}
-
-$$x_{i}^{new} \gets x_{i}^{new} + x_{i}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
-
-$$x_{j}^{new} \gets x_{j}^{new} + x_{j}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
-
-$$n_{i}\gets n_{i}+1$$
-
-$$n_{j}\gets n_{j}+1$$
-
-For every vertex i
-
-$$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
