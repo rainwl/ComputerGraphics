@@ -128,9 +128,38 @@ $$x_{i}\gets c+Rr_{i}$$
 
 ---
 
+
+
+### Implicit Integration Cloth Solver
+
+![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
+
+---
+
+`gradient`
+
+$$g=\frac{1}{\Delta t^{2}}M(x-\tilde{x}) -f(x)$$
+
+`loop through each edge`
+
+$$g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j}),g_{j}\gets g_{j}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )$$
+
+`update`
+
+$$x_{i}\gets x_{i}-(\frac{1}{\Delta t^{2}}m_{i}+4k )^{-1}g_{i}$$
+
+`colliding and apply impulse`
+
+$$v_{i}\gets v_{i}+\frac{1}{\Delta t}(c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| }-x_{i} )$$
+
+$$x_{i}\gets c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| } $$
+
+
+---
+
 #### Mass-Spring System(explicit integration)
 
-Explicit integration suffers from `numerical instability` caused by `overshooting`,when the 
+Explicit integration suffers from `numerical instability` caused by `overshooting`,when the
 `stiffness` k and/or the `time step` dt is too large.
 
 Edge list:`E`
@@ -301,30 +330,6 @@ $$n_{j}\gets n_{j}+1$$
 For every vertex i
 
 $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
-
-### Implicit Integration Cloth Solver
-
-![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
-
----
-
-`gradient`
-
-$$g=\frac{1}{\Delta t^{2}}M(x-\tilde{x}) -f(x)$$
-
-`loop through each edge`
-
-$$g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j}),g_{j}\gets g_{j}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )$$
-
-`update`
-
-$$x_{i}\gets x_{i}-(\frac{1}{\Delta t^{2}}m_{i}+4k )^{-1}g_{i}$$
-
-`colliding and apply impulse`
-
-$$v_{i}\gets v_{i}+\frac{1}{\Delta t}(c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| }-x_{i} )$$
-
-$$x_{i}\gets c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| } $$
 
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
