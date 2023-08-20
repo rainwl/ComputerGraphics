@@ -127,9 +127,7 @@ $$x_{i}\gets c+Rr_{i}$$
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/10#issue-1837554865](https://user-images.githubusercontent.com/51992995/258560892-91bf53f2-1130-48eb-82af-83646a1ca358.gif)
 
 ---
-
-
-`PBD`
+#### `PBD`
 
 For k = 0...K
 
@@ -152,6 +150,9 @@ $$n_{j}\gets n_{j}+1$$
 For every vertex i
 
 $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
+
+
+
 
 ### Implicit Integration Cloth Solver
 
@@ -329,7 +330,6 @@ $$\Delta x\gets \Delta x+\alpha D^{-1}r$$
 
 
 ---
-
 
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
