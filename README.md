@@ -128,9 +128,132 @@ $$x_{i}\gets c+Rr_{i}$$
 
 ---
 
+`constraint`
+
+$$\phi (x) = \begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L=0$$
+
+$$\{x_{i}^{new},x_{j}^{new}\}=argmin\frac{1}{2} \{m_{i}\begin{Vmatrix}x_{i}^{new}-x_{i}\end{Vmatrix}^{2}+m_{j}\begin{Vmatrix}x_{j}^{new}-x_{j}\end{Vmatrix}^{2} \}$$
+
+$$x_{i}^{new}\gets x_{i}-\frac{m_{j}}{m_{i}+m_{j}}(\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}} $$
+
+`Gauss-Seidel Approach` `stochastic gradient descent`
+
+For k = 0...K
+
+For every edge e = {i,j}
+
+$$x_{i}\gets x_{i}-\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}} $$
+
+$$x_{j}\gets x_{j}+\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}} $$
+
+`Jacobi Approach`
+
+For k = 0...K
+
+For every vertex i
+
+$$x_{i}^{new}\gets 0$$
+
+$$n_{i}\gets 0$$
+
+For every edge e = {i,j}
+
+$$x_{i}^{new}\gets x_{i}^{new}+x_{i}-\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}}$$
+
+$$x_{j}^{new}\gets x_{j}^{new}+x_{j}-\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}}$$
+
+$$n_{i}\gets n_{i}+1$$
+
+$$n_{j}\gets n_{j}+1$$
+
+For every vertex i
+
+$$x_{i}\gets (x_{i}^{new}=\alpha x_{i})/(n_{i}+\alpha )$$
+
+---
+
+#### `PBD`
+
+For k = 0...K
+
+For every vertex i
+
+$$x_{i}^{new}\gets  \vec{0} $$
+
+$$n_{i}\gets  \vec{0} $$
+
+For every edge e = {i,j}
+
+$$x_{i}^{new} \gets x_{i}^{new} + x_{i}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
+
+$$x_{j}^{new} \gets x_{j}^{new} + x_{j}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
+
+$$n_{i}\gets n_{i}+1$$
+
+$$n_{j}\gets n_{j}+1$$
+
+For every vertex i
+
+$$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
+
+`effect`
+
+- The number of iterations
+- The mesh resolution
+
+---
+
+`Strain Limiting`
+
+Do simulation,update x and v
+
+$$v\gets ...$$
+
+$$x\gets ...$$
+
+Strain limiting starts
+
+$$x^{new}\gets Projection(x)$$
+
+$$v\gets v+(x^{new}-x)/\Delta t$$
+
+$$x\gets x^{new}$$
+
+### Projective Dynamics
+
+### Constrained Dynamics
+
+
+### Implicit Integration Cloth Solver
+
+![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
+
+---
+
+`gradient`
+
+$$g=\frac{1}{\Delta t^{2}}M(x-\tilde{x}) -f(x)$$
+
+`loop through each edge`
+
+$$g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j}),g_{j}\gets g_{j}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )$$
+
+`update`
+
+$$x_{i}\gets x_{i}-(\frac{1}{\Delta t^{2}}m_{i}+4k )^{-1}g_{i}$$
+
+`colliding and apply impulse`
+
+$$v_{i}\gets v_{i}+\frac{1}{\Delta t}(c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| }-x_{i} )$$
+
+$$x_{i}\gets c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| } $$
+
+
+---
+
 #### Mass-Spring System(explicit integration)
 
-Explicit integration suffers from `numerical instability` caused by `overshooting`,when the 
+Explicit integration suffers from `numerical instability` caused by `overshooting`,when the
 `stiffness` k and/or the `time step` dt is too large.
 
 Edge list:`E`
@@ -277,54 +400,6 @@ $$\Delta x\gets \Delta x+\alpha D^{-1}r$$
 
 
 ---
-
-`PBD`
-
-For k = 0...K
-
-For every vertex i
-
-$$x_{i}^{new}\gets  \vec{0} $$
-
-$$n_{i}\gets  \vec{0} $$
-
-For every edge e = {i,j}
-
-$$x_{i}^{new} \gets x_{i}^{new} + x_{i}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
-
-$$x_{j}^{new} \gets x_{j}^{new} + x_{j}-\frac{1}{2} (\left \| x_{i}-x_{j} \right \| -L_{e})\frac{x_{i}-x_{j}}{\left \| x_{i}-x_{j} \right \| } $$
-
-$$n_{i}\gets n_{i}+1$$
-
-$$n_{j}\gets n_{j}+1$$
-
-For every vertex i
-
-$$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
-
-### Implicit Integration Cloth Solver
-
-![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
-
----
-
-`gradient`
-
-$$g=\frac{1}{\Delta t^{2}}M(x-\tilde{x}) -f(x)$$
-
-`loop through each edge`
-
-$$g_{i}\gets g_{i}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )(x_{i}-x_{j}),g_{j}\gets g_{j}+k(1-\frac{L_{e}}{\left \| x_{i}-x_{j} \right \| } )$$
-
-`update`
-
-$$x_{i}\gets x_{i}-(\frac{1}{\Delta t^{2}}m_{i}+4k )^{-1}g_{i}$$
-
-`colliding and apply impulse`
-
-$$v_{i}\gets v_{i}+\frac{1}{\Delta t}(c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| }-x_{i} )$$
-
-$$x_{i}\gets c+r\frac{x_{i}-c}{\left \|x_{i}-c  \right \| } $$
 
 ### Finite Element Method
 `St.Venant-Kirchhoff(StVk)` `explicit time integration` `tetrahedral`
