@@ -462,6 +462,12 @@ $$f_{0} = -\frac{\sigma }{6} (x_{10}\times x_{20}+ x_{20}\times x_{30}+x_{30}\ti
 
 ---
 
+`Height Field`
+
+$$\frac{du(x)}{dt}=-\frac{1}{\rho }  \frac{dP(x)}{dx} $$
+
+
+
 `shallow wave equation`
 
 $$\frac{d^{2}h }{dt^{2}}=\frac{h}{\rho }  \frac{d^{2}p}{dx^{2}} $$
