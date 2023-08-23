@@ -170,9 +170,6 @@ For every vertex i
 
 $$x_{i}\gets (x_{i}^{new}=\alpha x_{i})/(n_{i}+\alpha )$$
 
-
-
-
 ---
 
 #### `PBD`
@@ -199,8 +196,10 @@ For every vertex i
 
 $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 
+`effect`
 
-
+- The number of iterations
+- The mesh resolution
 
 ### Implicit Integration Cloth Solver
 
