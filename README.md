@@ -219,6 +219,9 @@ $$v\gets v+(x^{new}-x)/\Delta t$$
 
 $$x\gets x^{new}$$
 
+### Projective Dynamics
+
+### Constrained Dynamics
 
 
 ### Implicit Integration Cloth Solver
