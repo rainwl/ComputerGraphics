@@ -136,7 +136,7 @@ $$\{x_{i}^{new},x_{j}^{new}\}=argmin\frac{1}{2} \{m_{i}\begin{Vmatrix}x_{i}^{new
 
 $$x_{i}^{new}\gets x_{i}-\frac{m_{j}}{m_{i}+m_{j}}(\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}} $$
 
-`Gauss-Seidel Approach`
+`Gauss-Seidel Approach` `stochastic gradient descent`
 
 For k = 0...K
 
@@ -145,6 +145,32 @@ For every edge e = {i,j}
 $$x_{i}\gets x_{i}-\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}} $$
 
 $$x_{j}\gets x_{j}+\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}} $$
+
+`Jacobi Approach`
+
+For k = 0...K
+
+For every vertex i
+
+$$x_{i}^{new}\gets 0$$
+
+$$n_{i}\gets 0$$
+
+For every edge e = {i,j}
+
+$$x_{i}^{new}\gets x_{i}^{new}+x_{i}-\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}}$$
+
+$$x_{j}^{new}\gets x_{j}^{new}+x_{j}-\frac{1}{2} (\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L_{e}) \frac{x_{i}-x_{j}}{\begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}}$$
+
+$$n_{i}\gets n_{i}+1$$
+
+$$n_{j}\gets n_{j}+1$$
+
+For every vertex i
+
+$$x_{i}\gets (x_{i}^{new}=\alpha x_{i})/(n_{i}+\alpha )$$
+
+
 
 
 ---
