@@ -127,6 +127,17 @@ $$x_{i}\gets c+Rr_{i}$$
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/10#issue-1837554865](https://user-images.githubusercontent.com/51992995/258560892-91bf53f2-1130-48eb-82af-83646a1ca358.gif)
 
 ---
+
+`constraint`
+
+$$\phi (x) = \begin{Vmatrix}x_{i}-x_{j}\end{Vmatrix}-L=0$$
+
+$$\{x_{i}^{new},x_{j}^{new}\}=argmin\frac{1}{2} \{m_{i}\begin{Vmatrix}x_{i}^{new}-x_{i}\end{Vmatrix}^{2}+m_{j}\begin{Vmatrix}x_{j}^{new}-x_{j}\end{Vmatrix}^{2} \}$$
+
+
+
+---
+
 #### `PBD`
 
 For k = 0...K
