@@ -201,6 +201,26 @@ $$x_{i}\gets (x_{i}^{new}+\alpha x_{i} )/(n_{i}+\alpha )$$
 - The number of iterations
 - The mesh resolution
 
+---
+
+`Strain Limiting`
+
+Do simulation,update x and v
+
+$$v\gets ...$$
+
+$$x\gets ...$$
+
+Strain limiting starts
+
+$$x^{new}\gets Projection(x)$$
+
+$$v\gets v+(x^{new}-x)/\Delta t$$
+
+$$x\gets x^{new}$$
+
+
+
 ### Implicit Integration Cloth Solver
 
 ![https://github.com/rainwl/CG-GMP-PBCA/issues/11#issue-1837564243](https://user-images.githubusercontent.com/51992995/258561289-31c6ed76-81ed-429a-9f39-c3e948eaceca.gif)
