@@ -30,3 +30,11 @@ Physics-BasedComputerAnimation/Library/
 Physics-BasedComputerAnimation/.idea/.idea.Physics-BasedComputerAnimation/.idea/
 
 Physics-BasedComputerAnimation/Build/
+
+.idea/
+
+*.vsidx
+
+Physics-BasedComputerAnimation/.vs/
+
+Physics-BasedComputerAnimation/.vsconfig
