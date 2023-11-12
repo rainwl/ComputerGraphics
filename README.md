@@ -1,4 +1,7 @@
-# CG-GMP-PBCA
+# Computer Graphics
+
+CG-GMP-PBCA
+
 `Computer Graphics`
 `Geometry Modeling And Processing`
 `Physics-based Computer Animation`
